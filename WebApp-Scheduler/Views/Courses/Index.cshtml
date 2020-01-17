@@ -53,6 +53,7 @@
                 @{
                     Html.RenderAction("DisplayPrerequsite", new { courseId = item.Id });
                 }
+                <span> @Html.ActionLink("Add", "AddPrerequisite", new { courseId = item.Id })</span>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Instructor)
@@ -84,3 +85,8 @@
     }
 
 </table>
+
+<p>
+
+    If you are running this application for first time please click @Html.ActionLink("here","InitialDatabaseEntries")
+</p>

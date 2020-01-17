@@ -187,6 +187,7 @@
     <Content Include="Views\Courses\Index.cshtml" />
     <Content Include="Views\Courses\DisplayPrerequsite.cshtml" />
     <Content Include="Views\Courses\AddPrerequisite.cshtml" />
+    <Content Include="Views\Courses\InitialDatabaseEntries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

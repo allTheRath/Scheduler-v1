@@ -21,6 +21,60 @@ namespace WebApp_Scheduler.Controllers
             return View(courses.ToList());
         }
 
+        public ActionResult InitialDatabaseEntries()
+        {
+            var teachingDaysOption = db.TeachingDays.ToList();
+            if (teachingDaysOption != null && teachingDaysOption.Count() != 0)
+            {
+                return RedirectToAction("Index");
+            }
+
+            char[] days = new char[] { 'M', 'T', 'W', 'R', 'F' };
+            HashSet<string> options = new HashSet<string>();
+
+            for (int i = 0; i < days.Length; i++)
+            {
+                int counter = 1;
+
+
+                while (counter <= days.Length)
+                {
+                    string op = "";
+                    for (int k = i; k < counter; k++)
+                    {
+                        op += days[k];
+                    }
+                    if (op != "")
+                    {
+                        options.Add(op);
+                    }
+                    counter++;
+
+                }
+
+            }
+
+
+            for (int i = 0; i < days.Length; i++)
+            {
+                for (int j = 0; j < days.Length; j++)
+                {
+                    if (i != j)
+                    {
+                        string opt = "" + days[i] + days[j];
+                        options.Add(opt);
+                    }
+                }
+            }
+            foreach (var op in options)
+            {
+                db.TeachingDays.Add(new ScheduleType() { DayOption = op });
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
         // GET: Courses/Details/5
         public ActionResult Details(int? id)
         {
@@ -120,14 +174,60 @@ namespace WebApp_Scheduler.Controllers
             return RedirectToAction("Index");
         }
 
+
         public ActionResult AddPrerequisite(int? courseId)
         {
             if (courseId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var courses = db.Courses.ToList().Where(x => x.Id != courseId).ToList();
+            var alredySelectedCourseIds = db.PrerequisiteCourses.ToList().Where(x => x.ActualCourseId == courseId).ToList().Select(x => x.RequiredCourseId).ToList();
+            var selectionOptions = courses.Where(x => alredySelectedCourseIds.Contains(x.Id) == false).ToList().Select(x => new CourseSelectionViewModel() { CourseName = x.CourseName, Id = x.Id }).ToList();
+            var alreadySelected = courses.Where(x => alredySelectedCourseIds.Contains(x.Id)).ToList().Select(x => new CourseSelectionViewModel() { CourseName = x.CourseName, Id = x.Id }).ToList();
 
-            return View();
+            ListOfCourseSelectionViewModel listOfCourseSelectionViewModel = new ListOfCourseSelectionViewModel();
+            listOfCourseSelectionViewModel.CourseId = Convert.ToInt32(courseId);
+            listOfCourseSelectionViewModel.selectedCourses = alreadySelected;
+            listOfCourseSelectionViewModel.selectOptions = selectionOptions;
+
+            return View(listOfCourseSelectionViewModel);
+        }
+
+        public ActionResult AddPrerequisiteConfirm(int? CourseId, int? Id)
+        {
+
+            if (Id == null || CourseId == null)
+            {
+                return RedirectToAction("AddPrerequisite", new { courseId = CourseId });
+
+            }
+
+            PreRequisite preRequisite = new PreRequisite();
+            preRequisite.ActualCourseId = (int)CourseId;
+            preRequisite.RequiredCourseId = (int)Id;
+            db.PrerequisiteCourses.Add(preRequisite);
+            db.SaveChanges();
+            return RedirectToAction("AddPrerequisite", new { courseId = CourseId });
+
+        }
+
+        public ActionResult RemovePrerequisite(int? CourseId, int? Id)
+        {
+            if (Id == null && CourseId == null)
+            {
+                return RedirectToAction("AddPrerequisite", new { courseId = CourseId });
+
+            }
+            PreRequisite preRequisite = db.PrerequisiteCourses.Where(x => x.ActualCourseId == CourseId && x.RequiredCourseId == Id).FirstOrDefault();
+            if (preRequisite != null)
+            {
+                db.PrerequisiteCourses.Remove(preRequisite);
+                db.SaveChanges();
+
+            }
+            return RedirectToAction("AddPrerequisite", new { courseId = CourseId });
+
         }
 
         public ActionResult DisplayPrerequsite(int? courseId)

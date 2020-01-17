@@ -1,1 +1,26 @@
-﻿
+﻿@model IEnumerable<string>
+@{
+    Layout = null;
+}
+@if (Model == null)
+{
+    <div>
+        <p>
+
+
+            N/A
+
+
+        </p>
+    </div>
+}
+else
+{
+    <div>
+        @foreach (var item in Model)
+        {
+            <span>@item ,</span>
+        }
+    </div>
+
+}

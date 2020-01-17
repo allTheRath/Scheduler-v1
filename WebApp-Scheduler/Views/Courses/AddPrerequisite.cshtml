@@ -1,37 +1,51 @@
-﻿@model WebApp_Scheduler.Models.PreRequisite
+﻿@model WebApp_Scheduler.Models.ListOfCourseSelectionViewModel
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>PreRequisite</h4>
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <div>
+        <h4>Prerequisites</h4>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.RequiredCourseId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RequiredCourseId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RequiredCourseId, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ActualCourseId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ActualCourseId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ActualCourseId, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <dl class="dl-horizontal">
+            <h5> Selected Prerequisite Courses</h5>
+            @foreach (var c in Model.selectedCourses)
+            {
+                <dd>
+                    <span style="border: 1px solid lightgray; padding: 3px; margin: 3px;">
+                        @c.CourseName
+                        <span> @Html.ActionLink("Remove", "RemovePrerequisite", new { Id = c.Id, CourseId = Model.CourseId }) </span>
+                    </span>
+                </dd>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+            }
+
+        </dl>
+        <br />
+        <dl class="dl-horizontal">
+            <h5> Select Prerequisite Courses</h5>
+
+            @foreach (var o in Model.selectOptions)
+            {
+        <dd>
+            <span style="border: 1px solid lightgray; padding: 3px; margin: 3px;">
+
+                @o.CourseName  <span> @Html.ActionLink("Add", "AddPrerequisiteConfirm", new { Id = o.Id, CourseId = Model.CourseId }) </span>
+
+            </span>
+        </dd>
+                    }
+
+
+            </dl>
+        <br />
     </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
+
+<p>
+    @Html.ActionLink("Back to List", "Index", "Courses")
+</p>
+
