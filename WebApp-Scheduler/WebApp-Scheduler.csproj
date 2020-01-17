@@ -54,6 +54,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
@@ -140,6 +141,14 @@
     <Compile Include="Migrations\202001171729424_init.designer.cs">
       <DependentUpon>202001171729424_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001172120449_programAdded.cs" />
+    <Compile Include="Migrations\202001172120449_programAdded.designer.cs">
+      <DependentUpon>202001172120449_programAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001172307085_programdatetime.cs" />
+    <Compile Include="Migrations\202001172307085_programdatetime.designer.cs">
+      <DependentUpon>202001172307085_programdatetime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -188,6 +197,7 @@
     <Content Include="Views\Courses\DisplayPrerequsite.cshtml" />
     <Content Include="Views\Courses\AddPrerequisite.cshtml" />
     <Content Include="Views\Courses\InitialDatabaseEntries.cshtml" />
+    <Content Include="Views\Courses\ProgramDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -211,6 +221,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001171729424_init.resx">
       <DependentUpon>202001171729424_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001172120449_programAdded.resx">
+      <DependentUpon>202001172120449_programAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001172307085_programdatetime.resx">
+      <DependentUpon>202001172307085_programdatetime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

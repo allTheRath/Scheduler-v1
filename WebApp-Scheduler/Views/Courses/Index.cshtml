@@ -6,9 +6,6 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
 
@@ -53,7 +50,7 @@
                 @{
                     Html.RenderAction("DisplayPrerequsite", new { courseId = item.Id });
                 }
-                <span> @Html.ActionLink("Add", "AddPrerequisite", new { courseId = item.Id })</span>
+                <span> @Html.ActionLink("Change", "AddPrerequisite", new { courseId = item.Id })</span>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Instructor)
@@ -86,6 +83,11 @@
 
 </table>
 
+<p>
+    @{ 
+        Html.RenderAction("ProgramDetails");
+    }
+</p>
 <p>
 
     If you are running this application for first time please click @Html.ActionLink("here","InitialDatabaseEntries")

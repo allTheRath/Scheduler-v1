@@ -18,59 +18,116 @@ namespace WebApp_Scheduler.Controllers
         public ActionResult Index()
         {
             var courses = db.Courses.Include(c => c.ScheduleType);
+
             return View(courses.ToList());
         }
 
-        public ActionResult InitialDatabaseEntries()
+        public ActionResult ProgramDetails(string flag = "0")
         {
-            var teachingDaysOption = db.TeachingDays.ToList();
-            if (teachingDaysOption != null && teachingDaysOption.Count() != 0)
+            if (flag == "1")
+            {
+                ViewBag.Changed = false;
+
+            } else
+            {
+                ViewBag.Changed = true;
+
+            }
+            var programOf = db.Programs.ToList().FirstOrDefault();
+            if (programOf == null)
+            {
+                ProgramDetails program = new ProgramDetails();
+                program.ProgramName = "";
+                program.ProgramStartDate = DateTime.Now;
+                program.ProgramEndDate = DateTime.Now;
+                db.Programs.Add(program);
+
+                db.SaveChanges();
+                programOf = db.Programs.FirstOrDefault();
+            }
+
+            return View(programOf);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ProgramDetails([Bind(Include = "Id,ProgramName,ProgramStartDate,ProgramEndDate")] ProgramDetails program)
+        {
+            if (program.ProgramEndDate == null || program.ProgramStartDate == null)
             {
                 return RedirectToAction("Index");
+
             }
-
-            char[] days = new char[] { 'M', 'T', 'W', 'R', 'F' };
-            HashSet<string> options = new HashSet<string>();
-
-            for (int i = 0; i < days.Length; i++)
+            ProgramDetails programAlready = db.Programs.Find(program.Id);
+            if(programAlready != null)
             {
-                int counter = 1;
-
-
-                while (counter <= days.Length)
-                {
-                    string op = "";
-                    for (int k = i; k < counter; k++)
-                    {
-                        op += days[k];
-                    }
-                    if (op != "")
-                    {
-                        options.Add(op);
-                    }
-                    counter++;
-
-                }
-
+                programAlready.ProgramName = program.ProgramName;
+                programAlready.ProgramStartDate =program.ProgramStartDate;
+                programAlready.ProgramEndDate = program.ProgramEndDate;
+                db.SaveChanges();
+                ViewBag.Changed = true;
+                return RedirectToAction("Index");
             }
+            return View(program);
+        }
+        public ActionResult InitialDatabaseEntries()
+        {
+            //var teachingDaysOption = db.TeachingDays.ToList();
+            //if (teachingDaysOption != null && teachingDaysOption.Count() != 0)
+            //{
+            //    return RedirectToAction("Index");
+            //}
+
+            //char[] days = new char[] { 'M', 'T', 'W', 'R', 'F' };
+            //HashSet<string> options = new HashSet<string>();
+
+            //for (int i = 0; i < days.Length; i++)
+            //{
+            //    int counter = 1;
 
 
-            for (int i = 0; i < days.Length; i++)
-            {
-                for (int j = 0; j < days.Length; j++)
-                {
-                    if (i != j)
-                    {
-                        string opt = "" + days[i] + days[j];
-                        options.Add(opt);
-                    }
-                }
-            }
-            foreach (var op in options)
-            {
-                db.TeachingDays.Add(new ScheduleType() { DayOption = op });
-            }
+            //    while (counter <= days.Length)
+            //    {
+            //        string op = "";
+            //        for (int k = i; k < counter; k++)
+            //        {
+            //            op += days[k];
+            //        }
+            //        if (op != "")
+            //        {
+            //            options.Add(op);
+            //        }
+            //        counter++;
+
+            //    }
+
+            //}
+
+
+            //for (int i = 0; i < days.Length; i++)
+            //{
+            //    for (int j = 0; j < days.Length; j++)
+            //    {
+            //        if (i != j)
+            //        {
+            //            string opt = "" + days[i] + days[j];
+            //            options.Add(opt);
+            //        }
+            //    }
+            //}
+            //foreach (var op in options)
+            //{
+            //    db.TeachingDays.Add(new ScheduleType() { DayOption = op });
+            //}
+
+            ProgramDetails program = new ProgramDetails();
+            program.ProgramName = "";
+            program.ProgramStartDate = DateTime.Now;
+            program.ProgramEndDate = DateTime.Now;
+            db.Programs.Add(program);
+
             db.SaveChanges();
+
 
             return RedirectToAction("Index");
         }

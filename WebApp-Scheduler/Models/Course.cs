@@ -1,12 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
 namespace WebApp_Scheduler.Models
 {
+    public class ProgramDetails
+    {
+        public int Id { get; set; }
+        [DisplayName("Program Name")]
+        public string ProgramName { get; set; }
+        
+        [DataType(DataType.Date)]
+        [DisplayName("Program Start Date")]
+        public DateTime? ProgramStartDate { get; set; }
+        
+        [DataType(DataType.Date)]
+        [DisplayName("Program End Date")]
+        public DateTime? ProgramEndDate { get; set; }
+    
+    }
+
     public class Course
     {
         public int Id { get; set; }
@@ -17,11 +34,15 @@ namespace WebApp_Scheduler.Models
         public int HoursPerDay { get; set; }
         [DisplayName("# Of Days")]
         public int? NumberOfDays { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? StartDate { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
         [DisplayName("Schedule Type(MWF/TTH etc)")]
         public int ScheduleTypeId { get; set; }
         public virtual ScheduleType ScheduleType { get; set; }
+        
+        public int ProgramId { get; set; }
     }
 
     public class PreRequisite
@@ -45,6 +66,7 @@ namespace WebApp_Scheduler.Models
         public DbSet<Course> Courses { get; set; }
         public DbSet<PreRequisite> PrerequisiteCourses { get; set; }
         public DbSet<ScheduleType> TeachingDays { get; set; }
+        public DbSet<ProgramDetails> Programs { get; set; }
     }
 
     public class CourseSelectionViewModel
