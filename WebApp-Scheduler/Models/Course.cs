@@ -61,14 +61,16 @@ namespace WebApp_Scheduler.Models
 
     }
 
+    
     public class ScheduleContext : DbContext
     {
         public DbSet<Course> Courses { get; set; }
         public DbSet<PreRequisite> PrerequisiteCourses { get; set; }
         public DbSet<ScheduleType> TeachingDays { get; set; }
         public DbSet<ProgramDetails> Programs { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        
     }
-
     public class CourseSelectionViewModel
     {
         public int Id { get; set; }
