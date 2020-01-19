@@ -167,6 +167,14 @@ namespace WebApp_Scheduler.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId")] Course course)
         {
+            int counter = 1;
+            int temp = course.HoursPerDay;
+            while(temp < course.ContactHours)
+            {
+                temp += course.HoursPerDay;
+                counter++;
+            }
+            course.NumberOfDays = counter;
             if (ModelState.IsValid)
             {
                 db.Courses.Add(course);
@@ -201,6 +209,14 @@ namespace WebApp_Scheduler.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId")] Course course)
         {
+            int counter = 1;
+            int temp = course.HoursPerDay;
+            while (temp < course.ContactHours)
+            {
+                temp += course.HoursPerDay;
+                counter++;
+            }
+            course.NumberOfDays = counter;
             if (ModelState.IsValid)
             {
                 db.Entry(course).State = EntityState.Modified;

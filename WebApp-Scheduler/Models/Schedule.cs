@@ -46,7 +46,7 @@ namespace WebApp_Scheduler.Models
         public static List<string> GetColumNames()
         {
             var columnNames = new string[] { "Course", "Prerequisites", "Instructor", "ContactHours", "HoursPerDay", "# Of Days", "Schedule Type(MWF/TTH) etc", "Start Date", "End Date" };
-     
+
             return columnNames.ToList();
         }
 
@@ -54,12 +54,12 @@ namespace WebApp_Scheduler.Models
         {
             List<string> data = new List<string>();
             var courses = db.Courses.ToList();
-            foreach(var c in courses)
+            foreach (var c in courses)
             {
                 data.Add(c.CourseName);
                 var courseIDs = db.PrerequisiteCourses.Where(x => x.ActualCourseId == c.Id).ToList().Select(x => x.RequiredCourseId).ToList();
                 string prerequsites = "";
-                for(int i = 0; i < courseIDs.Count(); i++)
+                for (int i = 0; i < courseIDs.Count(); i++)
                 {
                     var courseRetrived = db.Courses.Find(courseIDs[i]);
                     prerequsites += courseRetrived.CourseName + " , ";
@@ -71,9 +71,20 @@ namespace WebApp_Scheduler.Models
                 data.Add(c.NumberOfDays.ToString());
                 var schedule = db.TeachingDays.Find(c.ScheduleTypeId);
                 data.Add(schedule.DayOption);
-                data.Add(Convert.ToString(c.StartDate));
-                data.Add(Convert.ToString(c.EndDate));
-                
+                string sd = c.StartDate.Value.Month.ToString();
+                sd += "-";
+                sd += c.StartDate.Value.Day.ToString();
+                sd += "-";
+                sd += c.StartDate.Value.Year.ToString();
+                data.Add(sd);
+                sd = "";
+                sd = c.EndDate.Value.Month.ToString();
+                sd += "-";
+                sd += c.EndDate.Value.Day.ToString();
+                sd += "-";
+                sd += c.EndDate.Value.Year.ToString();
+                data.Add(sd);
+
             }
 
             return data;
@@ -81,7 +92,7 @@ namespace WebApp_Scheduler.Models
 
         public bool WriteTableToFile(Table table)
         {
-        
+
             Application xlApp = new Application();
             Workbook xlWorkBook;
             Worksheet xlWorkSheet;
@@ -89,27 +100,42 @@ namespace WebApp_Scheduler.Models
             xlWorkBook = xlApp.Workbooks.Add(misValue);
             xlWorkSheet = (Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
+            // formating date cells..
+            int rowLength = table.ColumNames.Count();
+            int howmanyRows = table.Data.Count() / rowLength;
+
+            
             for (int i = 0; i < table.ColumNames.Count(); i++)
             {
                 xlWorkSheet.Cells[1, i + 1] = table.ColumNames[i];
             }
-            if(table.Data != null)
+            if (table.Data != null)
             {
-                int rowLength = table.ColumNames.Count();
-                int howmanyRows = table.Data.Count() / rowLength;
                 int counter = 0;
                 for (int j = 2; j <= howmanyRows; j++)
                 {
                     for (int k = 1; k <= rowLength; k++)
                     {
-                        xlWorkSheet.Cells[j, k] = table.Data[counter];
+
+
+                        string val = (table.Data[counter]).ToString();
+                        if (k == rowLength - 1 || k == rowLength - 2)
+                        {
+                            
+                            xlWorkSheet.Cells[j, k] = val;
+
+                        }
+                        else
+                        {
+                            xlWorkSheet.Cells[j, k] = val;
+                        }
                         counter++;
                     }
                 }
             }
-            
+
             //adding header column..
-            var path = Path.Combine(HttpContext.Current.Server.MapPath("~/Excel/"), "Option.xls");
+            var path = Path.Combine(HttpContext.Current.Server.MapPath("~/Excel/"), "Scedule.xls");
 
             xlWorkBook.SaveAs(path, XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
@@ -143,7 +169,7 @@ namespace WebApp_Scheduler.Models
         public List<int> CouresIds { get; set; }
         public int RemainingTime { get; set; }
 
-        
+
     }
 
 
