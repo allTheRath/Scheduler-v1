@@ -35,6 +35,15 @@
             </div>
 
         </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalTeachingHoursOfDay, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.TotalTeachingHoursOfDay, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TotalTeachingHoursOfDay, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
         <span class="form-group">
             <span class="col-md-offset-2 col-md-10 btn btn-default" style="max-width: 120px;">
                 @Html.ActionLink(" Change ", "ProgramDetails", new { flag = "1" })
@@ -79,6 +88,14 @@ else
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.ProgramEndDate, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.ProgramEndDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TotalTeachingHoursOfDay, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.TotalTeachingHoursOfDay, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TotalTeachingHoursOfDay, "", new { @class = "text-danger" })
                 </div>
             </div>
 

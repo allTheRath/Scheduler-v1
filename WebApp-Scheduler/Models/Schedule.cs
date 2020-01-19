@@ -123,5 +123,28 @@ namespace WebApp_Scheduler.Models
         }
     }
 
+    public class SceduleHelperHolder
+    {
+        public int CourseId { get; set; }
+        public string CourseName { get; set; }
+        public List<char> TeachingDays { get; set; }
+        public int TotalHoursPerDay { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int OverallTotalHours { get; set; }
+        public bool Allocated { get; set; }
+
+        public List<int> PrerequsiteCourseIds { get; set; }
+    }
+    public class TimeAllocationHelper
+    {
+        public DateTime Date { get; set; }
+        public char Day { get; set; }
+        public List<int> CouresIds { get; set; }
+        public int RemainingTime { get; set; }
+
+        
+    }
+
 
 }

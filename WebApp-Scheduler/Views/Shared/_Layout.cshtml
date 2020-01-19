@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#3237B1;">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#1940d9;">
         <div class="container">
             <div class="navbar-header" >
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -19,9 +19,9 @@
                 @Html.ActionLink("Scheduler", "Index", "Courses", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" style="color: red;">
                     <li>@Html.ActionLink("Add-Course", "Create", "Courses")</li>
-                    <li>@Html.ActionLink("Calculate-Schedule", "About", "Courses")</li>
+                    <li>@Html.ActionLink("Calculate-Schedule", "CalculateSchedule", "Courses")</li>
                     @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                 </ul>
             </div>

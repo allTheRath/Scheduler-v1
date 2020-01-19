@@ -28,7 +28,8 @@ namespace WebApp_Scheduler.Controllers
             {
                 ViewBag.Changed = false;
 
-            } else
+            }
+            else
             {
                 ViewBag.Changed = true;
 
@@ -51,19 +52,24 @@ namespace WebApp_Scheduler.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ProgramDetails([Bind(Include = "Id,ProgramName,ProgramStartDate,ProgramEndDate")] ProgramDetails program)
+        public ActionResult ProgramDetails([Bind(Include = "Id,ProgramName,ProgramStartDate,ProgramEndDate,TotalTeachingHoursOfDay")] ProgramDetails program)
         {
-            if (program.ProgramEndDate == null || program.ProgramStartDate == null)
-            {
-                return RedirectToAction("Index");
-
-            }
             ProgramDetails programAlready = db.Programs.Find(program.Id);
-            if(programAlready != null)
+            if (programAlready != null)
             {
+                if (program.ProgramEndDate != null)
+                {
+                    programAlready.ProgramEndDate = program.ProgramEndDate;
+
+                }
+                if (program.ProgramStartDate != null)
+                {
+                    programAlready.ProgramStartDate = program.ProgramStartDate;
+                }
+
                 programAlready.ProgramName = program.ProgramName;
-                programAlready.ProgramStartDate =program.ProgramStartDate;
-                programAlready.ProgramEndDate = program.ProgramEndDate;
+                programAlready.TotalTeachingHoursOfDay = program.TotalTeachingHoursOfDay;
+
                 db.SaveChanges();
                 ViewBag.Changed = true;
                 return RedirectToAction("Index");
@@ -296,6 +302,248 @@ namespace WebApp_Scheduler.Controllers
             var allRequiredCourseIds = db.PrerequisiteCourses.ToList().Where(x => x.ActualCourseId == courseId).Select(x => x.RequiredCourseId).ToList();
             List<string> courses = db.Courses.ToList().Where(x => allRequiredCourseIds.Contains(x.Id)).Select(x => x.CourseName).ToList();
             return View(courses);
+        }
+        
+
+        public ActionResult CalculateSchedule()
+        {
+            var program = db.Programs.FirstOrDefault();
+
+            List<TimeAllocationHelper> daysOfStudy = program.GetAllDayInstances(program);    
+
+
+            var courses = db.Courses.Include(c => c.ScheduleType).ToList();
+            var courseIds = courses.Select(x => x.Id).ToList();
+            var prerequsiteCourses = db.PrerequisiteCourses.ToList();
+            // find all courses which do not have prerequsites.
+            var allCoursesWithOutPrerequsites = new List<int>();
+            var allCoursesWithPrerequsites = new List<int>();
+            List<SceduleHelperHolder> data = new List<SceduleHelperHolder>();
+            foreach (var c in courses)
+            {
+                var checking = prerequsiteCourses.Where(x => x.ActualCourseId == c.Id).FirstOrDefault();
+                if (checking == null)
+                {
+                    allCoursesWithOutPrerequsites.Add(c.Id);
+                }
+                else
+                {
+                    allCoursesWithPrerequsites.Add(c.Id);
+                }
+                SceduleHelperHolder holder = new SceduleHelperHolder();
+                holder.PrerequsiteCourseIds = prerequsiteCourses.Where(x => x.ActualCourseId == c.Id).ToList().Select(x => x.RequiredCourseId).ToList();
+                holder.Allocated = false;
+                holder.CourseId = c.Id;
+                holder.CourseName = c.CourseName;
+                holder.TotalHoursPerDay = c.HoursPerDay;
+                holder.OverallTotalHours = c.ContactHours;
+                holder.TeachingDays = new List<char>();
+                for (int i = 0; i < c.ScheduleType.DayOption.Length; i++)
+                {
+                    holder.TeachingDays.Add(c.ScheduleType.DayOption[i]);
+                }
+
+                data.Add(holder);
+            }
+
+
+
+
+            // allocating course with it's aloowed time per day..
+         
+            int loopingCounter = 0;
+            while (loopingCounter < allCoursesWithOutPrerequsites.Count())
+            {
+                // tempcounter increments at assigning time..
+                var courseIDToAssignTime = allCoursesWithOutPrerequsites[loopingCounter];
+                var courseInput = courses.Where(x => x.Id == courseIDToAssignTime).FirstOrDefault();
+                int loopingIncrementor = 0;
+         
+                var c = data.Where(x => x.CourseId == courseIDToAssignTime).FirstOrDefault();
+                DateTime? startTemp = null;
+                DateTime? endTemp = null;
+                bool flag1 = true;
+
+                while (c.OverallTotalHours > 0)
+                {
+                    var day = daysOfStudy[loopingIncrementor];
+                    if(day.CouresIds == null)
+                    {
+                        day.CouresIds = new List<int>();
+                    }
+                    if(day.RemainingTime > 0 && c.TeachingDays.Contains(day.Day))
+                    {
+                        if(flag1 == true)
+                        {
+                            startTemp = day.Date;
+                            flag1 = false;
+                        }
+                        day.CouresIds.Add(courseIDToAssignTime);
+                        if(day.RemainingTime - courseInput.HoursPerDay > 0)
+                        {
+                            day.RemainingTime -= courseInput.HoursPerDay;
+                            c.OverallTotalHours -= courseInput.HoursPerDay;
+
+                        } else
+                        {
+                            int differenceRemaining = program.TotalTeachingHoursOfDay - day.RemainingTime;
+                            day.RemainingTime = 0;
+                            c.OverallTotalHours -= differenceRemaining;
+                        }
+
+                    }
+                    loopingIncrementor++;
+
+                }
+                c.Allocated = true;
+                endTemp = daysOfStudy[loopingIncrementor].Date;
+
+                c.StartDate = startTemp;
+                c.EndDate = endTemp;
+                loopingCounter++;
+            }
+
+            List<bool> endConditionCheck = new List<bool>();
+            List<bool> raceConditionCheck = new List<bool>();
+            int howManyLeft = allCoursesWithPrerequsites.Count();
+            while (endConditionCheck.Count() < howManyLeft)
+            {
+                // running untill all courses are allocated..
+                //selecting course
+                for(int o = 0; o < allCoursesWithPrerequsites.Count(); o++)
+                {
+                    var tempCourseData = data.Where(x => x.CourseId == allCoursesWithPrerequsites[o]).FirstOrDefault();       
+                    if(tempCourseData.Allocated == false && tempCourseData.PrerequsiteCourseIds != null)
+                    {
+                        bool op = false;
+                        for(int p = 0; p < tempCourseData.PrerequsiteCourseIds.Count(); p++)
+                        {
+                            var alReadyAssignedCourse = data.Where(x => x.CourseId == tempCourseData.PrerequsiteCourseIds[p]).FirstOrDefault();
+                            if(alReadyAssignedCourse.Allocated == false)
+                            {
+                                op = false;
+                                break;
+                            } else
+                            {
+                                op = true;
+                            }
+                        }
+
+                        if(op == true)
+                        {
+                            DateTime? miniMumStartDate = null;
+
+                            for(int e = 0; e < tempCourseData.PrerequsiteCourseIds.Count(); e++)
+                            {
+                                if(miniMumStartDate == null)
+                                {
+                                    miniMumStartDate = data.Where(x => x.CourseId == tempCourseData.PrerequsiteCourseIds[e]).FirstOrDefault().EndDate;
+
+                                } else
+                                {
+                                    DateTime? tempDate = data.Where(x => x.CourseId == tempCourseData.PrerequsiteCourseIds[e]).FirstOrDefault().EndDate;
+                                    if(miniMumStartDate.Value.Ticks < tempDate.Value.Ticks)
+                                    {
+                                        miniMumStartDate = tempDate;
+                                    }
+                                }
+
+                            }
+
+
+
+                            var courseIDToAssignTime = tempCourseData.CourseId;
+                            var courseInput = courses.Where(x => x.Id == courseIDToAssignTime).FirstOrDefault();
+                            int loopingIncrementor = 0;
+
+                            var c = tempCourseData;
+                            DateTime? startTemp = null;
+                            DateTime? endTemp = null;
+                            bool flag1 = true;
+
+
+                            bool appropriateStartingDay = true;
+                            while(appropriateStartingDay == true)
+                            {
+                                var day = daysOfStudy[loopingIncrementor];
+                                if(day.Date.Ticks < miniMumStartDate.Value.Ticks)
+                                {
+                                    loopingIncrementor++;
+                                } else
+                                {
+                                    appropriateStartingDay = false;
+                                }
+                            }
+
+                            while (c.OverallTotalHours > 0)
+                            {
+                                var day = daysOfStudy[loopingIncrementor];
+                                
+                                if (day.CouresIds == null)
+                                {
+                                    day.CouresIds = new List<int>();
+                                }
+                                if (day.RemainingTime > 0 && c.TeachingDays.Contains(day.Day))
+                                {
+                                    if (flag1 == true)
+                                    {
+                                        startTemp = day.Date;
+                                        flag1 = false;
+                                    }
+                                    day.CouresIds.Add(courseIDToAssignTime);
+                                    if (day.RemainingTime - courseInput.HoursPerDay > 0)
+                                    {
+                                        day.RemainingTime -= courseInput.HoursPerDay;
+                                        c.OverallTotalHours -= courseInput.HoursPerDay;
+
+                                    }
+                                    else
+                                    {
+                                        int differenceRemaining = program.TotalTeachingHoursOfDay - day.RemainingTime;
+                                        day.RemainingTime = 0;
+                                        c.OverallTotalHours -= differenceRemaining;
+                                    }
+
+                                }
+                                loopingIncrementor++;
+
+                            }
+
+                            c.Allocated = true;
+                            endTemp = daysOfStudy[loopingIncrementor].Date;
+                            allCoursesWithPrerequsites.Remove(c.CourseId);
+                            c.StartDate = startTemp;
+                            c.EndDate = endTemp;
+                            endConditionCheck.Add(true);
+                        }
+                        else
+                        {
+                            raceConditionCheck.Add(false);
+                        }
+                    }
+                }
+
+                if(allCoursesWithPrerequsites.Count() != 0 && raceConditionCheck.Count() == allCoursesWithPrerequsites.Count())
+                {
+                    throw new Exception(" Some course requires prerequsite courses but all prerequsite courses are dependent on each other. Please check the input prerequsite again. ");
+                    
+                } else
+                {
+                    raceConditionCheck = new List<bool>();
+                }
+
+            }
+
+
+            foreach(var courseOfInput in courses)
+            {
+               var tempCourseData = data.Where(x => x.CourseId == courseOfInput.Id).FirstOrDefault();
+                courseOfInput.StartDate = tempCourseData.StartDate;
+                courseOfInput.EndDate = tempCourseData.EndDate;
+
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

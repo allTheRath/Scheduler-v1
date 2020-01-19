@@ -173,6 +173,10 @@
     <Compile Include="Migrations\202001180033502_addingScheduleClass.designer.cs">
       <DependentUpon>202001180033502_addingScheduleClass.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001182236435_addingTotalTeachingHoursPerDay.cs" />
+    <Compile Include="Migrations\202001182236435_addingTotalTeachingHoursPerDay.designer.cs">
+      <DependentUpon>202001182236435_addingTotalTeachingHoursPerDay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Schedule.cs" />
@@ -257,6 +261,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001180033502_addingScheduleClass.resx">
       <DependentUpon>202001180033502_addingScheduleClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001182236435_addingTotalTeachingHoursPerDay.resx">
+      <DependentUpon>202001182236435_addingTotalTeachingHoursPerDay.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

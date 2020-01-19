@@ -22,6 +22,44 @@ namespace WebApp_Scheduler.Models
         [DisplayName("Program End Date")]
         public DateTime? ProgramEndDate { get; set; }
     
+        [DisplayName("Hours Of Teaching Per Day")]
+        public int TotalTeachingHoursOfDay { get; set; }
+        public List<TimeAllocationHelper> GetAllDayInstances(ProgramDetails program)
+        {
+            char[] days = new char[] { 'M', 'T', 'W', 'R', 'F' };
+            // getting program time length
+            List<TimeAllocationHelper> daysOfStudy = new List<TimeAllocationHelper>();
+
+            int totalDaysOfEducation = program.CalculateTotalDaysOfEducation(program);
+            DateTime startD = program.ProgramStartDate.Value.Date;
+            for (int k = 0; k < totalDaysOfEducation; k++)
+            {
+                if (startD.DayOfWeek != DayOfWeek.Saturday && startD.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    TimeAllocationHelper dayInstance = new TimeAllocationHelper();
+                    dayInstance.RemainingTime = program.TotalTeachingHoursOfDay;
+                    dayInstance.Date = startD;
+                    int a = (int)startD.DayOfWeek - 1;
+                    dayInstance.Day = days[a];
+                    daysOfStudy.Add(dayInstance);
+                }
+
+                startD = startD.AddDays(1);
+
+            }
+
+            return daysOfStudy;
+        }
+        public int CalculateTotalDaysOfEducation(ProgramDetails program)
+        {
+            int yearStart = program.ProgramStartDate.Value.Year;
+            int yearEnd = program.ProgramEndDate.Value.Year;
+            int howManyYear = yearEnd - yearStart;
+            int startDayInt = program.ProgramStartDate.Value.DayOfYear;
+            int endDayInt = program.ProgramEndDate.Value.DayOfYear;
+            int TotalDaysOfEducation = (howManyYear * 365) - startDayInt + endDayInt;
+            return TotalDaysOfEducation;
+        }
     }
 
     public class Course
