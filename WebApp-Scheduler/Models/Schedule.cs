@@ -40,6 +40,7 @@ namespace WebApp_Scheduler.Models
 
     public class Table
     {
+        public ProgramDetails Program { get; set; }
         public List<string> ColumNames { get; set; }
         public List<string> Data { get; set; }
 
@@ -133,9 +134,13 @@ namespace WebApp_Scheduler.Models
                     }
                 }
             }
-
+            string programNameWithDate = table.Program.ProgramName;
+            programNameWithDate += DateTime.Now.Month.ToString();
+            programNameWithDate += "-";
+            programNameWithDate += DateTime.Now.Day.ToString();
+            programNameWithDate += ".xls";
             //adding header column..
-            var path = Path.Combine(HttpContext.Current.Server.MapPath("~/Excel/"), "Scedule.xls");
+            var path = Path.Combine(HttpContext.Current.Server.MapPath("~/Excel/"), programNameWithDate);
 
             xlWorkBook.SaveAs(path, XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
@@ -159,7 +164,7 @@ namespace WebApp_Scheduler.Models
         public DateTime? EndDate { get; set; }
         public int OverallTotalHours { get; set; }
         public bool Allocated { get; set; }
-
+        public int NoOfTeachingDays { get; set; }
         public List<int> PrerequsiteCourseIds { get; set; }
     }
     public class TimeAllocationHelper

@@ -13,15 +13,15 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.ProgramName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
                 @Html.DisplayFor(model => model.ProgramName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ProgramName, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" >
             @Html.LabelFor(model => model.ProgramStartDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
                 @Html.DisplayFor(model => model.ProgramStartDate, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ProgramStartDate, "", new { @class = "text-danger" })
             </div>
@@ -29,7 +29,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.ProgramEndDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
                 @Html.DisplayFor(model => model.ProgramEndDate, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ProgramEndDate, "", new { @class = "text-danger" })
             </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.TotalTeachingHoursOfDay, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
                 @Html.DisplayFor(model => model.TotalTeachingHoursOfDay, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.TotalTeachingHoursOfDay, "", new { @class = "text-danger" })
             </div>

@@ -24,6 +24,7 @@ namespace WebApp_Scheduler.Controllers
 
             List<string> data = table.GetDataFromDatabaseCourses(db);
             table.Data = data;
+            table.Program = db.Programs.FirstOrDefault();
             bool saved = table.WriteTableToFile(table);
             if(saved == true)
             {

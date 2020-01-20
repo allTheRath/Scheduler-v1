@@ -354,6 +354,7 @@ namespace WebApp_Scheduler.Controllers
                 holder.TotalHoursPerDay = c.HoursPerDay;
                 holder.OverallTotalHours = c.ContactHours;
                 holder.TeachingDays = new List<char>();
+                holder.NoOfTeachingDays = 0;
                 for (int i = 0; i < c.ScheduleType.DayOption.Length; i++)
                 {
                     holder.TeachingDays.Add(c.ScheduleType.DayOption[i]);
@@ -394,17 +395,19 @@ namespace WebApp_Scheduler.Controllers
                             startTemp = day.Date;
                             flag1 = false;
                         }
-                        day.CouresIds.Add(courseIDToAssignTime);
+
                         if(day.RemainingTime - courseInput.HoursPerDay > 0)
                         {
+                            day.CouresIds.Add(courseIDToAssignTime);
                             day.RemainingTime -= courseInput.HoursPerDay;
                             c.OverallTotalHours -= courseInput.HoursPerDay;
-
+                            c.NoOfTeachingDays++;
                         } else
                         {
-                            int differenceRemaining = program.TotalTeachingHoursOfDay - day.RemainingTime;
+                            day.CouresIds.Add(courseIDToAssignTime);
+                            c.OverallTotalHours -= day.RemainingTime;
                             day.RemainingTime = 0;
-                            c.OverallTotalHours -= differenceRemaining;
+                            c.NoOfTeachingDays++;
                         }
 
                     }
@@ -413,7 +416,6 @@ namespace WebApp_Scheduler.Controllers
                 }
                 c.Allocated = true;
                 endTemp = daysOfStudy[loopingIncrementor].Date;
-
                 c.StartDate = startTemp;
                 c.EndDate = endTemp;
                 loopingCounter++;
@@ -493,34 +495,43 @@ namespace WebApp_Scheduler.Controllers
 
                             while (c.OverallTotalHours > 0)
                             {
-                                var day = daysOfStudy[loopingIncrementor];
+                                if(loopingIncrementor >= 0 && loopingIncrementor < daysOfStudy.Count())
+                                {
+                                    var day = daysOfStudy[loopingIncrementor];
+
+                                    if (day.CouresIds == null)
+                                    {
+                                        day.CouresIds = new List<int>();
+                                    }
+                                    if (day.RemainingTime > 0 && c.TeachingDays.Contains(day.Day))
+                                    {
+                                        if (flag1 == true)
+                                        {
+                                            startTemp = day.Date;
+                                            flag1 = false;
+                                        }
+                                        if (day.RemainingTime - courseInput.HoursPerDay > 0)
+                                        {
+                                            day.CouresIds.Add(courseIDToAssignTime);
+                                            day.RemainingTime -= courseInput.HoursPerDay;
+                                            c.OverallTotalHours -= courseInput.HoursPerDay;
+                                            c.NoOfTeachingDays++;
+                                        }
+                                        else
+                                        {
+                                            day.CouresIds.Add(courseIDToAssignTime);
+
+                                            c.OverallTotalHours -= day.RemainingTime;
+                                            day.RemainingTime = 0;
+                                            c.NoOfTeachingDays++;
+                                        }
+
+                                    }
+                                } else
+                                {
+                                    loopingIncrementor = 0;
+                                }
                                 
-                                if (day.CouresIds == null)
-                                {
-                                    day.CouresIds = new List<int>();
-                                }
-                                if (day.RemainingTime > 0 && c.TeachingDays.Contains(day.Day))
-                                {
-                                    if (flag1 == true)
-                                    {
-                                        startTemp = day.Date;
-                                        flag1 = false;
-                                    }
-                                    day.CouresIds.Add(courseIDToAssignTime);
-                                    if (day.RemainingTime - courseInput.HoursPerDay > 0)
-                                    {
-                                        day.RemainingTime -= courseInput.HoursPerDay;
-                                        c.OverallTotalHours -= courseInput.HoursPerDay;
-
-                                    }
-                                    else
-                                    {
-                                        int differenceRemaining = program.TotalTeachingHoursOfDay - day.RemainingTime;
-                                        day.RemainingTime = 0;
-                                        c.OverallTotalHours -= differenceRemaining;
-                                    }
-
-                                }
                                 loopingIncrementor++;
 
                             }
@@ -556,7 +567,7 @@ namespace WebApp_Scheduler.Controllers
                var tempCourseData = data.Where(x => x.CourseId == courseOfInput.Id).FirstOrDefault();
                 courseOfInput.StartDate = tempCourseData.StartDate;
                 courseOfInput.EndDate = tempCourseData.EndDate;
-
+                courseOfInput.NumberOfDays = tempCourseData.NoOfTeachingDays;
             }
             db.SaveChanges();
             return RedirectToAction("Index");

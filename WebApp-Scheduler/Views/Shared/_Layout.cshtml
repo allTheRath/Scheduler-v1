@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#1940d9;">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#fff;">
         <div class="container">
             <div class="navbar-header" >
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -16,12 +16,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Scheduler", "Index", "Courses", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
+                <span class="hover-a">
+                    @Html.ActionLink("Scheduler", "Index", "Courses", new { area = "" }, new { @class = "navbar-brand" })
+                </span>
+                    </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav" style="color: red;">
-                    <li>@Html.ActionLink("Add-Course", "Create", "Courses")</li>
-                    <li>@Html.ActionLink("Calculate-Schedule", "CalculateSchedule", "Courses")</li>
+                <ul class="nav navbar-nav" style="color: #514f51;">
+                    <li class="hover-a">@Html.ActionLink("Add-Course", "Create", "Courses")</li>
+                    <li class="hover-a">@Html.ActionLink("Calculate-Schedule", "CalculateSchedule", "Courses")</li>
                     @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                 </ul>
             </div>
@@ -34,6 +36,12 @@
             <p>&copy; @DateTime.Now.Year - Scheduler For Courses</p>
         </footer>
     </div>
+    <style>
+        .hover-a :hover{
+            color: #00a88d !important;
+            
+        }
+    </style>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
