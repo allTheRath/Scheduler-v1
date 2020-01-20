@@ -54,7 +54,7 @@ namespace WebApp_Scheduler.Models
         {
             int yearStart = program.ProgramStartDate.Value.Year;
             int yearEnd = program.ProgramEndDate.Value.Year;
-            int howManyYear = yearEnd - yearStart;
+            int howManyYear = yearEnd - yearStart + 1;
             int startDayInt = program.ProgramStartDate.Value.DayOfYear;
             int endDayInt = program.ProgramEndDate.Value.DayOfYear;
             int TotalDaysOfEducation = (howManyYear * 365) - startDayInt + endDayInt;
