@@ -51,10 +51,10 @@ namespace WebApp_Scheduler.Models
             return columnNames.ToList();
         }
 
-        public List<string> GetDataFromDatabaseCourses(ScheduleContext db)
+        public List<string> GetDataFromDatabaseCourses(ScheduleContext db,int programId)
         {
             List<string> data = new List<string>();
-            var courses = db.Courses.ToList();
+            var courses = db.Courses.Where(x => x.ProgramId == programId).ToList();
             foreach (var c in courses)
             {
                 data.Add(c.CourseName);

@@ -16,19 +16,24 @@ namespace WebApp_Scheduler.Controllers
         private ScheduleContext db = new ScheduleContext();
 
         // GET: Schedules
-        public ActionResult Index()
+        public ActionResult Index(int? programId)
         {
+            if (programId == null)
+            {
+                throw new Exception("Program id was not passed. can't generate excel without program details.");
+            }
+            int proId = (int)programId;
             Table table = new Table();
             List<string> columns = Table.GetColumNames();
             table.ColumNames = columns;
 
-            List<string> data = table.GetDataFromDatabaseCourses(db);
+            List<string> data = table.GetDataFromDatabaseCourses(db, proId);
             table.Data = data;
-            table.Program = db.Programs.FirstOrDefault();
+            table.Program = db.Programs.Find(programId);
             bool saved = table.WriteTableToFile(table);
-            if(saved == true)
+            if (saved == true)
             {
-                return RedirectToAction("Index", "Courses");
+                return RedirectToAction("Index", "Courses", new { IdOfProgram = proId });
             }
             return View();
         }
