@@ -13,17 +13,24 @@ namespace WebApp_Scheduler.Models
         public int Id { get; set; }
         [DisplayName("Program Name")]
         public string ProgramName { get; set; }
-        
+
         [DataType(DataType.Date)]
         [DisplayName("Program Start Date")]
         public DateTime? ProgramStartDate { get; set; }
-        
+
         [DataType(DataType.Date)]
         [DisplayName("Program End Date")]
         public DateTime? ProgramEndDate { get; set; }
-    
+
         [DisplayName("Hours Of Teaching Per Day")]
         public int TotalTeachingHoursOfDay { get; set; }
+
+        [DataType(DataType.Time)]
+        public DateTime? StartTime { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime? EndTime { get; set; }
+
+
         public List<TimeAllocationHelper> GetAllDayInstances(ProgramDetails program)
         {
             char[] days = new char[] { 'M', 'T', 'W', 'R', 'F' };
@@ -79,7 +86,7 @@ namespace WebApp_Scheduler.Models
         [DisplayName("Schedule Type(MWF/TTH etc)")]
         public int ScheduleTypeId { get; set; }
         public virtual ScheduleType ScheduleType { get; set; }
-        
+
         public int ProgramId { get; set; }
     }
 
@@ -99,7 +106,7 @@ namespace WebApp_Scheduler.Models
 
     }
 
-    
+
     public class ScheduleContext : DbContext
     {
         public DbSet<Course> Courses { get; set; }
@@ -107,7 +114,9 @@ namespace WebApp_Scheduler.Models
         public DbSet<ScheduleType> TeachingDays { get; set; }
         public DbSet<ProgramDetails> Programs { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
-        
+        public DbSet<Calendar> Calendars { get; set; }
+        public DbSet<CalendarCoursePerDay> CoursesOfCalendarDay { get; set; }
+
     }
     public class CourseSelectionViewModel
     {
@@ -119,6 +128,7 @@ namespace WebApp_Scheduler.Models
     public class ListOfCourseSelectionViewModel
     {
         public int CourseId { get; set; }
+        public int IdOfProgram { get; set; }
         public List<CourseSelectionViewModel> selectedCourses { get; set; }
         public List<CourseSelectionViewModel> selectOptions { get; set; }
     }

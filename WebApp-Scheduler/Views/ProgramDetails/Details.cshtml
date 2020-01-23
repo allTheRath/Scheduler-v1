@@ -1,0 +1,50 @@
+﻿@model WebApp_Scheduler.Models.ProgramDetails
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ProgramDetails</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProgramName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProgramName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProgramStartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProgramStartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProgramEndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProgramEndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalTeachingHoursOfDay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalTeachingHoursOfDay)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

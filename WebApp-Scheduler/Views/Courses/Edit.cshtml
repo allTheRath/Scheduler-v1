@@ -89,5 +89,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", "Courses", new { IdOfProgram = @Model.ProgramId }, new { @class = "btn btn-default" })
 </div>

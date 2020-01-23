@@ -15,15 +15,29 @@ namespace WebApp_Scheduler.Controllers
         private ScheduleContext db = new ScheduleContext();
 
         // GET: Courses
-        public ActionResult Index()
+        public ActionResult Index(int? IdOfProgram, int ProgramId = 0)
         {
-            var courses = db.Courses.Include(c => c.ScheduleType);
+            if (ProgramId != 0)
+            {
+                var courses = db.Courses.Include(c => c.ScheduleType).Where(x => x.ProgramId == ProgramId);
 
-            return View(courses.ToList());
+                return View(courses.ToList());
+
+            }
+            else if (IdOfProgram != null)
+            {
+                var courses = db.Courses.Include(c => c.ScheduleType).Where(x => x.ProgramId == IdOfProgram);
+
+                return View(courses.ToList());
+
+            }
+
+            return View(new List<Course>());
         }
 
-        public ActionResult ProgramDetails(string flag = "0")
+        public ActionResult ProgramDetails(int? Id, string flag = "0")
         {
+
             if (flag == "1")
             {
                 ViewBag.Changed = false;
@@ -34,25 +48,15 @@ namespace WebApp_Scheduler.Controllers
                 ViewBag.Changed = true;
 
             }
-            var programOf = db.Programs.ToList().FirstOrDefault();
-            if (programOf == null)
-            {
-                ProgramDetails program = new ProgramDetails();
-                program.ProgramName = "";
-                program.ProgramStartDate = DateTime.Now;
-                program.ProgramEndDate = DateTime.Now;
-                db.Programs.Add(program);
 
-                db.SaveChanges();
-                programOf = db.Programs.FirstOrDefault();
-            }
+            var programOf = db.Programs.Find(Id);
 
             return View(programOf);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ProgramDetails([Bind(Include = "Id,ProgramName,ProgramStartDate,ProgramEndDate,TotalTeachingHoursOfDay")] ProgramDetails program)
+        public ActionResult ProgramDetails([Bind(Include = "Id,ProgramName,ProgramStartDate,ProgramEndDate,TotalTeachingHoursOfDay,StartTime,EndTime")] ProgramDetails program)
         {
             ProgramDetails programAlready = db.Programs.Find(program.Id);
             if (programAlready != null)
@@ -66,13 +70,21 @@ namespace WebApp_Scheduler.Controllers
                 {
                     programAlready.ProgramStartDate = program.ProgramStartDate;
                 }
+                if (program.StartTime != null)
+                {
+                    programAlready.StartTime = program.StartTime;
+                }
+                if (program.EndTime != null)
+                {
+                    programAlready.EndTime = program.EndTime;
+                }
 
                 programAlready.ProgramName = program.ProgramName;
                 programAlready.TotalTeachingHoursOfDay = program.TotalTeachingHoursOfDay;
 
                 db.SaveChanges();
                 ViewBag.Changed = true;
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { ProgramId = programAlready.Id });
             }
             return View(program);
         }
@@ -125,14 +137,16 @@ namespace WebApp_Scheduler.Controllers
             //{
             //    db.TeachingDays.Add(new ScheduleType() { DayOption = op });
             //}
+            //var c = db.Courses.ToList();
+            //c.ForEach(x => x.ProgramId = 1);
+            //db.SaveChanges();
+            //ProgramDetails program = new ProgramDetails();
+            //program.ProgramName = "";
+            //program.ProgramStartDate = DateTime.Now;
+            //program.ProgramEndDate = DateTime.Now;
+            //db.Programs.Add(program);
 
-            ProgramDetails program = new ProgramDetails();
-            program.ProgramName = "";
-            program.ProgramStartDate = DateTime.Now;
-            program.ProgramEndDate = DateTime.Now;
-            db.Programs.Add(program);
-
-            db.SaveChanges();
+            //db.SaveChanges();
 
 
             return RedirectToAction("Index");
@@ -157,6 +171,7 @@ namespace WebApp_Scheduler.Controllers
         public ActionResult Create()
         {
             ViewBag.ScheduleTypeId = new SelectList(db.TeachingDays, "Id", "DayOption");
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ProgramName");
             return View();
         }
 
@@ -165,7 +180,7 @@ namespace WebApp_Scheduler.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId")] Course course)
+        public ActionResult Create([Bind(Include = "Id,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId,ProgramId")] Course course)
         {
             int counter = 1;
             int temp = course.HoursPerDay;
@@ -179,10 +194,11 @@ namespace WebApp_Scheduler.Controllers
             {
                 db.Courses.Add(course);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { ProgramId = course.ProgramId });
             }
 
             ViewBag.ScheduleTypeId = new SelectList(db.TeachingDays, "Id", "DayOption", course.ScheduleTypeId);
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ProgramName", course.ProgramId);
             return View(course);
         }
 
@@ -260,16 +276,17 @@ namespace WebApp_Scheduler.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var thisCourse = db.Courses.Find(courseId);
             var courses = db.Courses.ToList().Where(x => x.Id != courseId).ToList();
             var alredySelectedCourseIds = db.PrerequisiteCourses.ToList().Where(x => x.ActualCourseId == courseId).ToList().Select(x => x.RequiredCourseId).ToList();
-            var selectionOptions = courses.Where(x => alredySelectedCourseIds.Contains(x.Id) == false).ToList().Select(x => new CourseSelectionViewModel() { CourseName = x.CourseName, Id = x.Id }).ToList();
+            var selectionOptions = courses.Where(x => alredySelectedCourseIds.Contains(x.Id) == false && x.ProgramId == thisCourse.ProgramId).ToList().Select(x => new CourseSelectionViewModel() { CourseName = x.CourseName, Id = x.Id }).ToList();
             var alreadySelected = courses.Where(x => alredySelectedCourseIds.Contains(x.Id)).ToList().Select(x => new CourseSelectionViewModel() { CourseName = x.CourseName, Id = x.Id }).ToList();
 
             ListOfCourseSelectionViewModel listOfCourseSelectionViewModel = new ListOfCourseSelectionViewModel();
             listOfCourseSelectionViewModel.CourseId = Convert.ToInt32(courseId);
             listOfCourseSelectionViewModel.selectedCourses = alreadySelected;
             listOfCourseSelectionViewModel.selectOptions = selectionOptions;
-
+            listOfCourseSelectionViewModel.IdOfProgram = thisCourse.ProgramId;
             return View(listOfCourseSelectionViewModel);
         }
 

@@ -147,8 +147,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CalendarsController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProgramDetailsController.cs" />
     <Compile Include="Controllers\SchedulesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -177,7 +179,16 @@
     <Compile Include="Migrations\202001182236435_addingTotalTeachingHoursPerDay.designer.cs">
       <DependentUpon>202001182236435_addingTotalTeachingHoursPerDay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001231850255_calendarAbility.cs" />
+    <Compile Include="Migrations\202001231850255_calendarAbility.designer.cs">
+      <DependentUpon>202001231850255_calendarAbility.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001232000531_change.cs" />
+    <Compile Include="Migrations\202001232000531_change.designer.cs">
+      <DependentUpon>202001232000531_change.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -228,6 +239,16 @@
     <Content Include="Views\Courses\InitialDatabaseEntries.cshtml" />
     <Content Include="Views\Courses\ProgramDetails.cshtml" />
     <Content Include="Views\Schedules\Index.cshtml" />
+    <Content Include="Views\Calendars\Create.cshtml" />
+    <Content Include="Views\Calendars\Delete.cshtml" />
+    <Content Include="Views\Calendars\Details.cshtml" />
+    <Content Include="Views\Calendars\Edit.cshtml" />
+    <Content Include="Views\Calendars\Index.cshtml" />
+    <Content Include="Views\ProgramDetails\Create.cshtml" />
+    <Content Include="Views\ProgramDetails\Delete.cshtml" />
+    <Content Include="Views\ProgramDetails\Details.cshtml" />
+    <Content Include="Views\ProgramDetails\Edit.cshtml" />
+    <Content Include="Views\ProgramDetails\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -264,6 +285,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001182236435_addingTotalTeachingHoursPerDay.resx">
       <DependentUpon>202001182236435_addingTotalTeachingHoursPerDay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001231850255_calendarAbility.resx">
+      <DependentUpon>202001231850255_calendarAbility.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001232000531_change.resx">
+      <DependentUpon>202001232000531_change.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

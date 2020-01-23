@@ -29,23 +29,24 @@
 
             @foreach (var o in Model.selectOptions)
             {
-        <dd>
-            <span style="border: 1px solid lightgray; padding: 3px; margin: 3px;">
+                <dd>
+                    <span style="border: 1px solid lightgray; padding: 3px; margin: 3px;">
 
-                @o.CourseName  <span> @Html.ActionLink("Add", "AddPrerequisiteConfirm", new { Id = o.Id, CourseId = Model.CourseId }) </span>
+                        @o.CourseName  <span> @Html.ActionLink("Add", "AddPrerequisiteConfirm", new { Id = o.Id, CourseId = Model.CourseId }) </span>
 
-            </span>
-        </dd>
-                    }
+                    </span>
+                </dd>
+            }
 
 
-            </dl>
+        </dl>
         <br />
     </div>
 
 </div>
 
 <p>
-    @Html.ActionLink("Back to List", "Index", "Courses")
+    @Html.ActionLink("Back to List", "Index", "Courses", new { IdOfProgram = @Model.IdOfProgram }, new { @class = "btn btn-default" })
 </p>
+
 

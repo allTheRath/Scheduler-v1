@@ -85,7 +85,7 @@
 
 <p>
     @{ 
-        Html.RenderAction("ProgramDetails");
+        Html.RenderAction("ProgramDetails",new { Id=(Model.ToList())[0].ProgramId});
     }
 </p>
 <p>
