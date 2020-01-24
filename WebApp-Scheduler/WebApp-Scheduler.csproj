@@ -187,6 +187,10 @@
     <Compile Include="Migrations\202001232000531_change.designer.cs">
       <DependentUpon>202001232000531_change.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001241552050_addingChangestocourse.cs" />
+    <Compile Include="Migrations\202001241552050_addingChangestocourse.designer.cs">
+      <DependentUpon>202001241552050_addingChangestocourse.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\Course.cs" />
@@ -239,9 +243,6 @@
     <Content Include="Views\Courses\InitialDatabaseEntries.cshtml" />
     <Content Include="Views\Courses\ProgramDetails.cshtml" />
     <Content Include="Views\Schedules\Index.cshtml" />
-    <Content Include="Views\Calendars\Create.cshtml" />
-    <Content Include="Views\Calendars\Delete.cshtml" />
-    <Content Include="Views\Calendars\Details.cshtml" />
     <Content Include="Views\Calendars\Edit.cshtml" />
     <Content Include="Views\Calendars\Index.cshtml" />
     <Content Include="Views\ProgramDetails\Create.cshtml" />
@@ -249,6 +250,8 @@
     <Content Include="Views\ProgramDetails\Details.cshtml" />
     <Content Include="Views\ProgramDetails\Edit.cshtml" />
     <Content Include="Views\ProgramDetails\Index.cshtml" />
+    <Content Include="Views\Calendars\ProgramTimeline.cshtml" />
+    <Content Include="Views\Courses\calenderView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -291,6 +294,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001232000531_change.resx">
       <DependentUpon>202001232000531_change.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001241552050_addingChangestocourse.resx">
+      <DependentUpon>202001241552050_addingChangestocourse.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

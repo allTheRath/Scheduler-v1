@@ -1,0 +1,250 @@
+﻿<style>
+    .single-ele {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        box-sizing: border-box;
+        font-size: 14px;
+        margin-right: 11px;
+        margin-bottom: 11px;
+        float: left;
+        width: 248px;
+        height: 210px;
+        background: url(/images/backfade.png) no-repeat 0px 0px;
+        text-align: center;
+    }
+
+    .table-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        box-sizing: border-box;
+        border-spacing: 0;
+        border-collapse: collapse;
+        background-color: transparent;
+    }
+
+    .caption-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 22px;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        color: #ffffff;
+        font-size: 15px;
+        padding-top: 4px;
+        padding-bottom: 8px;
+        text-align: center;
+    }
+
+    .thread-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+    }
+
+    .tbody-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+    }
+
+    .tr-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+    }
+
+    .th-first {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        line-height: 24px;
+        height: 24px;
+        color: #a2a2a2;
+        font-style: italic;
+        width: 36px;
+        font-size: 12px;
+    }
+
+    /*.th-rest {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        font-size: 12px;
+        text-align: center;
+        color: #686868;
+        width: 30px;
+        line-height: 24px;
+        height: 24px;
+    }*/
+
+    .tr-rest {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+    }
+
+    .wknr {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        line-height: 24px;
+        height: 24px;
+        color: #a2a2a2;
+        font-style: italic;
+        width: 36px;
+        font-size: 12px;
+    }
+
+    .emptycells {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        color: #686868;
+        font-size: 14px;
+        width: 30px;
+        line-height: 24px;
+        height: 24px;
+    }
+
+    .td-rest {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        color: #686868;
+        font-size: 14px;
+        width: 30px;
+        line-height: 24px;
+        height: 24px;
+    }
+
+    td{
+        background-color: lightblue;
+        box-sizing: border-box;
+        border: 1px solid grey;
+        border-radius: 3px 3px;
+    }
+</style>
+<div class="single-ele">
+    <table class="table-st">
+        <caption class="caption-st">
+            <b>December&nbsp;2019</b>
+        </caption>
+        <thead class="thread-st">
+            <tr class="tr-st">
+                <th class="th-first" title="Week number">No.</th>
+                <th class="th-first"  abbr="Sunday" title="Sunday">Su</th>
+                <th abbr="Monday" class="th-first"  title="Monday">Mo</th>
+                <th abbr="Tuesday" title="Tuesday" class="th-first" >Tu</th>
+                <th abbr="Wednesday" title="Wednesday" class="th-first" >We</th>
+                <th abbr="Thursday" title="Thursday" class="th-first" >Th</th>
+                <th abbr="Friday" title="Friday" class="th-first" >Fr</th>
+                <th abbr="Saturday" title="Saturday" class="th-first" >Sa</th>
+            </tr>
+        </thead>
+        <tbody class="tbody-st">
+            <tr class="tr-st">
+                <td class="wknr" title="Week number">49</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td class="td-empty">6</td>
+                <td class="td-empty">7</td>
+            </tr>
+            <tr>
+                <td class="wknr" title="Week number 50">50</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td class="wd_5">13</td>
+                <td class="wd_6">14</td>
+            </tr>
+            <tr>
+                <td class="wknr" title="Week number 51">51</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>19</td>
+                <td class="wd_5">20</td>
+                <td class="wd_6">21</td>
+            </tr>
+            <tr>
+                <td class="wknr" title="Week number 52">52</td>
+                <td>22</td>
+                <td>23</td>
+                <td>24</td>
+                <td class="vak"><a href="/holidays/christmas-day.html" title="Christmas Day 2019">25</a></td>
+                <td>26</td>
+                <td class="wd_5">27</td>
+                <td class="wd_6">28</td>
+            </tr>
+            <tr>
+                <td class="wknr" title="Week number 1">1</td>
+                <td>29</td>
+                <td>30</td>
+                <td>31</td>
+                <td colspan="4" class="emptycells">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="wknr"></td>
+                <td colspan="7" class="emptycells">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+

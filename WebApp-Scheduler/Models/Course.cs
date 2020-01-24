@@ -72,21 +72,28 @@ namespace WebApp_Scheduler.Models
     public class Course
     {
         public int Id { get; set; }
-        [DisplayName("Course")]
+        [DisplayName("Course Code")]
+        public string CourseCode { get; set; }
+        [DisplayName("Course Name")]
         public string CourseName { get; set; }
+        [DisplayName("Instructor Name")]
         public string Instructor { get; set; }
+        [DisplayName("Total Teaching Hours")]
         public int ContactHours { get; set; }
+        [DisplayName("Teaching Hours Per Day")]
         public int HoursPerDay { get; set; }
-        [DisplayName("# Of Days")]
+        [DisplayName("# Of Teaching Days")]
         public int? NumberOfDays { get; set; }
         [DataType(DataType.Date)]
+        [DisplayName("Starting Date")]
         public DateTime? StartDate { get; set; }
         [DataType(DataType.Date)]
+        [DisplayName("Ending Date")]
         public DateTime? EndDate { get; set; }
         [DisplayName("Schedule Type(MWF/TTH etc)")]
         public int ScheduleTypeId { get; set; }
         public virtual ScheduleType ScheduleType { get; set; }
-
+        [DisplayName("Program")]
         public int ProgramId { get; set; }
     }
 

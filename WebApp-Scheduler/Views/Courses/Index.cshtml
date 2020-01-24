@@ -89,6 +89,13 @@
     }
 </p>
 <p>
+    @Html.ActionLink("Calendar", "Index", "Calendars", new { programId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" })
+</p>
+
+<p>
+    @Html.ActionLink("Generate Calendar", "ProgramTimeline", "Calendars", new { ProgramId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" })
+</p>
+<p>
 
     To generate Excel Data please click @Html.ActionLink("generate", "Index", "Schedules", new { programId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" })
     Files are generated in Excel Folder on server.

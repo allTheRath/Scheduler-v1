@@ -177,7 +177,7 @@ namespace WebApp_Scheduler.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId,ProgramId")] Course course)
+        public ActionResult Create([Bind(Include = "Id,CourseCode,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId,ProgramId")] Course course)
         {
             int counter = 1;
             int temp = course.HoursPerDay;
@@ -220,7 +220,7 @@ namespace WebApp_Scheduler.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId")] Course course)
+        public ActionResult Edit([Bind(Include = "Id,CourseCode,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId")] Course course)
         {
             int counter = 1;
             int temp = course.HoursPerDay;
@@ -234,7 +234,7 @@ namespace WebApp_Scheduler.Controllers
             {
                 db.Entry(course).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { ProgramId = course.ProgramId });
             }
             ViewBag.ScheduleTypeId = new SelectList(db.TeachingDays, "Id", "DayOption", course.ScheduleTypeId);
             return View(course);
@@ -263,10 +263,13 @@ namespace WebApp_Scheduler.Controllers
             Course course = db.Courses.Find(id);
             db.Courses.Remove(course);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { ProgramId = course.ProgramId });
         }
 
-
+        public ActionResult calenderView()
+        {
+            return View();
+        }
         public ActionResult AddPrerequisite(int? courseId)
         {
             if (courseId == null)

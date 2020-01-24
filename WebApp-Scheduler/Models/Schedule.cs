@@ -46,7 +46,7 @@ namespace WebApp_Scheduler.Models
 
         public static List<string> GetColumNames()
         {
-            var columnNames = new string[] { "Course", "Prerequisites", "Instructor", "ContactHours", "HoursPerDay", "# Of Days", "Schedule Type(MWF/TTH) etc", "Start Date", "End Date" };
+            var columnNames = new string[] { "Course Code","Course Name", "Prerequisites Courses", "Instructor Name", "Total teaching hours", "Teaching hours per day", "# Of Teaching Days", "Schedule Type(MWF/TTH) etc", "Starting Date", "Ending Date" };
 
             return columnNames.ToList();
         }
@@ -57,6 +57,7 @@ namespace WebApp_Scheduler.Models
             var courses = db.Courses.Where(x => x.ProgramId == programId).ToList();
             foreach (var c in courses)
             {
+                data.Add(c.CourseCode);
                 data.Add(c.CourseName);
                 var courseIDs = db.PrerequisiteCourses.Where(x => x.ActualCourseId == c.Id).ToList().Select(x => x.RequiredCourseId).ToList();
                 string prerequsites = "";

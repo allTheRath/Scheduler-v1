@@ -15,148 +15,106 @@ namespace WebApp_Scheduler.Controllers
         private ScheduleContext db = new ScheduleContext();
 
         // GET: Calendars
-        public ActionResult Index()
+        public ActionResult Index(int? programId)
         {
-            return View(db.Calendars.ToList());
+            if (programId == null)
+            {
+                throw new Exception("No calenders for the program are generated.");
+            }
+            var program = db.Programs.Find(programId);
+            ViewBag.ProgramName = program.ProgramName;
+            var calendarList = db.Calendars.Where(x => x.ProgramId == programId).ToList();
+            return View(calendarList);
         }
 
-        // GET: Calendars/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Calendar calendar = db.Calendars.Find(id);
-            if (calendar == null)
-            {
-                return HttpNotFound();
-            }
-            return View(calendar);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "Id,IsHoliday,Date")] Calendar calendar)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(calendar).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(calendar);
+        //}
 
-        // GET: Calendars/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: Calendars/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,IsHoliday,Date")] Calendar calendar)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Calendars.Add(calendar);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(calendar);
-        }
-
-        // GET: Calendars/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Calendar calendar = db.Calendars.Find(id);
-            if (calendar == null)
-            {
-                return HttpNotFound();
-            }
-            return View(calendar);
-        }
-
-        // POST: Calendars/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,IsHoliday,Date")] Calendar calendar)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(calendar).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(calendar);
-        }
-
-        // GET: Calendars/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Calendar calendar = db.Calendars.Find(id);
-            if (calendar == null)
-            {
-                return HttpNotFound();
-            }
-            return View(calendar);
-        }
-
-        // POST: Calendars/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Calendar calendar = db.Calendars.Find(id);
-            db.Calendars.Remove(calendar);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        public ActionResult ProgramTimeline()
+        public ActionResult ProgramTimeline(int? ProgramId)
         {
             // runs only one time after creating program.
-            var program = db.Programs.FirstOrDefault();
+            var program = db.Programs.Find(ProgramId);
             if (program == null || program.ProgramStartDate == null || program.ProgramEndDate == null)
             {
                 throw new Exception("Program has to have a valid start end end date.");
             }
-            if (db.Calendars.ToList() != null)
-            {
-                //remove all previous days.
-                db.Calendars.ToList().RemoveAll(x => x.IsHoliday == false || x.IsHoliday == true);
-                // removes all dates 
-                db.SaveChanges();
-            }
+
             char[] days = new char[] { 'U', 'M', 'T', 'W', 'R', 'F', 'S' };
-            var calendarsList = db.Calendars.ToList();
+            var calendarsList = db.Calendars.Include(x => x.AllCoursesDays).Where(x => x.ProgramId == program.Id).ToList();
             int lengthOfProgramInDays = program.CalculateTotalDaysOfEducation(program);
             DateTime startDate = program.ProgramStartDate.Value;
+
+            if (calendarsList != null && calendarsList.Count() != 0)
+            {
+                calendarsList.RemoveAll(x => (x.Date < startDate) || (x.IsChanged == false));
+                //removing all dates before program dates if any changes made in program start and end date 
+                db.SaveChanges();
+
+            }
+            // creating a list of dates that are changed.
+            List<DateTime> previouslyAddedChanges = calendarsList.Where(x => x.IsChanged == true).Select(x => x.Date).ToList();
+
+            // making sure that all new changes are updated.
+            calendarsList = db.Calendars.Where(x => x.ProgramId == program.Id).ToList();
+            DateTime maximunAlredyArrengedDateInCalendar;
+            if (calendarsList != null && calendarsList.Count() != 0)
+            {
+                maximunAlredyArrengedDateInCalendar = calendarsList.Last().Date;
+            }
+            else
+            {
+                maximunAlredyArrengedDateInCalendar = startDate.AddDays(-1);
+            }
+
+            int idOfProgram = program.Id;
+            if (previouslyAddedChanges == null)
+            {
+                // no null pt ex for below iteration.
+                previouslyAddedChanges = new List<DateTime>();
+            }
             for (int i = 0; i < lengthOfProgramInDays; i++)
             {
-                Calendar c = new Calendar();
-                c.Date = startDate;
-                int a = (int)startDate.DayOfWeek;
-                c.Day = days[a];
-                if (startDate.DayOfWeek != DayOfWeek.Saturday && startDate.DayOfWeek != DayOfWeek.Sunday)
+
+                if (startDate > maximunAlredyArrengedDateInCalendar && (previouslyAddedChanges.Contains(startDate) == false))
                 {
-                    c.IsHoliday = false;
+                    Calendar c = new Calendar();
+                    c.Date = startDate;
+                    int a = (int)startDate.DayOfWeek;
+                    c.Day = days[a];
+                    if (startDate.DayOfWeek != DayOfWeek.Saturday && startDate.DayOfWeek != DayOfWeek.Sunday)
+                    {
+                        c.IsHoliday = false;
+
+                    }
+                    else
+                    {
+                        c.IsHoliday = true;
+
+                    }
+                    c.ProgramId = idOfProgram;
+                    calendarsList.Add(c);
 
                 }
-                else
-                {
-                    c.IsHoliday = true;
-
-                }
-
-                calendarsList.Add(c);
                 startDate = startDate.AddDays(1);
             }
             db.SaveChanges();
+            // initilizing calander days for given program or changed start end date for program
 
-            return View();
+
+
+            return RedirectToAction("Index", new { programId = idOfProgram });
+
         }
 
         protected override void Dispose(bool disposing)
