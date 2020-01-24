@@ -191,6 +191,14 @@
     <Compile Include="Migrations\202001241552050_addingChangestocourse.designer.cs">
       <DependentUpon>202001241552050_addingChangestocourse.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001241949333_designChangeForTimeline.cs" />
+    <Compile Include="Migrations\202001241949333_designChangeForTimeline.designer.cs">
+      <DependentUpon>202001241949333_designChangeForTimeline.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001241952237_removinggCalenderTimeline.cs" />
+    <Compile Include="Migrations\202001241952237_removinggCalenderTimeline.designer.cs">
+      <DependentUpon>202001241952237_removinggCalenderTimeline.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\Course.cs" />
@@ -252,6 +260,8 @@
     <Content Include="Views\ProgramDetails\Index.cshtml" />
     <Content Include="Views\Calendars\ProgramTimeline.cshtml" />
     <Content Include="Views\Courses\calenderView.cshtml" />
+    <Content Include="Views\Calendars\SingleMonth.cshtml" />
+    <Content Include="Views\Calendars\Month.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -297,6 +307,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001241552050_addingChangestocourse.resx">
       <DependentUpon>202001241552050_addingChangestocourse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001241949333_designChangeForTimeline.resx">
+      <DependentUpon>202001241949333_designChangeForTimeline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001241952237_removinggCalenderTimeline.resx">
+      <DependentUpon>202001241952237_removinggCalenderTimeline.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

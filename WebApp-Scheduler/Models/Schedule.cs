@@ -170,6 +170,8 @@ namespace WebApp_Scheduler.Models
     }
     public class TimeAllocationHelper
     {
+        public int Id { get; set; }
+        public int ProgramId { get; set; }
         public DateTime Date { get; set; }
         public char Day { get; set; }
         public List<int> CouresIds { get; set; }

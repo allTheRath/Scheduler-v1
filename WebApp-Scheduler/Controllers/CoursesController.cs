@@ -84,7 +84,7 @@ namespace WebApp_Scheduler.Controllers
 
                 db.SaveChanges();
                 ViewBag.Changed = true;
-                return RedirectToAction("Index", new { ProgramId = programAlready.Id });
+                return RedirectToAction("Index", new { IdOfProgram = programAlready.Id });
             }
             return View(program);
         }
@@ -191,7 +191,7 @@ namespace WebApp_Scheduler.Controllers
             {
                 db.Courses.Add(course);
                 db.SaveChanges();
-                return RedirectToAction("Index", new { ProgramId = course.ProgramId });
+                return RedirectToAction("Index", new { IdOfProgram = course.ProgramId });
             }
 
             ViewBag.ScheduleTypeId = new SelectList(db.TeachingDays, "Id", "DayOption", course.ScheduleTypeId);
@@ -220,7 +220,7 @@ namespace WebApp_Scheduler.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CourseCode,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId")] Course course)
+        public ActionResult Edit([Bind(Include = "Id,CourseCode,CourseName,Instructor,ContactHours,HoursPerDay,NumberOfDays,StartDate,EndDate,ScheduleTypeId,ProgramId")] Course course)
         {
             int counter = 1;
             int temp = course.HoursPerDay;
@@ -234,7 +234,7 @@ namespace WebApp_Scheduler.Controllers
             {
                 db.Entry(course).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", new { ProgramId = course.ProgramId });
+                return RedirectToAction("Index", new { IdOfProgram = course.ProgramId });
             }
             ViewBag.ScheduleTypeId = new SelectList(db.TeachingDays, "Id", "DayOption", course.ScheduleTypeId);
             return View(course);
@@ -261,9 +261,15 @@ namespace WebApp_Scheduler.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Course course = db.Courses.Find(id);
+            var prerequsites = db.PrerequisiteCourses.Where(x => x.ActualCourseId == id || x.RequiredCourseId == id).ToList();
+            foreach (var r in prerequsites)
+            {
+                db.PrerequisiteCourses.Remove(r);
+            }
+
             db.Courses.Remove(course);
             db.SaveChanges();
-            return RedirectToAction("Index", new { ProgramId = course.ProgramId });
+            return RedirectToAction("Index", new { IdOfProgram = course.ProgramId });
         }
 
         public ActionResult calenderView()
@@ -340,13 +346,14 @@ namespace WebApp_Scheduler.Controllers
 
         public ActionResult CalculateSchedule(int? programId)
         {
+
             if (programId == null)
             {
                 throw new Exception("Program id was not present.");
             }
             var program = db.Programs.Find(programId);
 
-            List<TimeAllocationHelper> daysOfStudy = program.GetAllDayInstances(program);
+            List<TimeAllocationHelper> daysOfStudy = program.GetAllDayInstances(program, db);
 
 
             var courses = db.Courses.Include(c => c.ScheduleType).Where(x => x.ProgramId == programId).ToList();
@@ -405,6 +412,7 @@ namespace WebApp_Scheduler.Controllers
                 while (c.OverallTotalHours > 0)
                 {
                     var day = daysOfStudy[loopingIncrementor];
+
                     if (day.CouresIds == null)
                     {
                         day.CouresIds = new List<int>();
@@ -463,6 +471,7 @@ namespace WebApp_Scheduler.Controllers
                         for (int p = 0; p < tempCourseData.PrerequsiteCourseIds.Count(); p++)
                         {
                             var alReadyAssignedCourse = data.Where(x => x.CourseId == tempCourseData.PrerequsiteCourseIds[p]).FirstOrDefault();
+
                             if (alReadyAssignedCourse.Allocated == false)
                             {
                                 op = false;
@@ -605,7 +614,21 @@ namespace WebApp_Scheduler.Controllers
                 courseOfInput.NumberOfDays = tempCourseData.NoOfTeachingDays;
             }
             db.SaveChanges();
-            return RedirectToAction("Index", new { ProgramId = courses[0].ProgramId });
+
+            //daysOfStudy
+            var programTimeLineData = db.TimeOfCourse.Where(x => x.ProgramId == program.Id).ToList();
+            foreach (var r in programTimeLineData)
+            {
+                db.TimeOfCourse.Remove(r);
+
+            }
+            db.SaveChanges();
+            foreach (var dayIns in daysOfStudy)
+            {
+                db.TimeOfCourse.Add(dayIns);
+            }
+            db.SaveChanges();
+            return RedirectToAction("Index", new { IdOfProgram = program.Id });
         }
 
         protected override void Dispose(bool disposing)
