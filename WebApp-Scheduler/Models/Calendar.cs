@@ -21,6 +21,7 @@ namespace WebApp_Scheduler.Models
         public DateTime startdate { get; set; }
         public DateTime enddate { get; set; }
         public int ProgramId { get; set; }
+        public string url { get; set; }
     }
 
     public class SelectHolidayHelper

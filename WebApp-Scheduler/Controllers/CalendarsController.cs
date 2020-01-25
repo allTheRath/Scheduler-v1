@@ -15,9 +15,9 @@ namespace WebApp_Scheduler.Controllers
         private ScheduleContext db = new ScheduleContext();
 
         // GET: Calendars
-        public ActionResult Index(int? programId, string href="")
+        public ActionResult Index(int? programId, string url="")
         {
-            if (programId == null)
+            if (programId == null && url == "")
             {
                 throw new Exception("No calenders for the program are generated.");
             }
@@ -31,19 +31,17 @@ namespace WebApp_Scheduler.Controllers
             //calendarList.OrderBy(x => x.Date).ToList();
             DateHelper dateHelper = new DateHelper() { startdate = firstDate, enddate = lastDate, ProgramId = program.Id };
             ViewBag.TotalMonths = totalMonths;
-            if(href == "")
+            dateHelper.url = "";
+            if (url != "")
             {
-                return View(dateHelper);
-
-            } else
-            {
-                return View(dateHelper);
-
+                ViewBag.Url = url;
+                dateHelper.url = url;
             }
+            return View(dateHelper);
         }
 
 
-        public ActionResult Month(DateTime? startdate, DateTime? enddate, int? monthNum, int? programId)
+        public ActionResult Month(DateTime? startdate, DateTime? enddate, int? monthNum, int? programId, string url)
         {
 
             DateTime month = startdate.Value;
@@ -125,9 +123,10 @@ namespace WebApp_Scheduler.Controllers
 
         public ActionResult SelectHoliday(int? calendarId, int? dayNum, string previousUri)
         {
+
             //DateTime? startdate, DateTime? enddate, int? monthNum, int? programId;
             var cal = db.Calendars.Find(calendarId);
-           
+
             if (cal != null && cal.Date.Day == dayNum)
             {
                 if (cal.IsHoliday == true)
@@ -139,24 +138,9 @@ namespace WebApp_Scheduler.Controllers
                     cal.IsHoliday = true;
                 }
                 db.SaveChanges();
-
             }
-            return Redirect(previousUri.ToString());
+            return RedirectToAction("Index",new { programId= cal.ProgramId, url = previousUri.ToString() });
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "Id,IsHoliday,Date")] Calendar calendar)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(calendar).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(calendar);
-        //}
-
 
         public ActionResult ProgramTimeline(int? ProgramId)
         {

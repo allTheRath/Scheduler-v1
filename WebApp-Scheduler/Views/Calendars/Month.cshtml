@@ -22,65 +22,110 @@
                 <th abbr="Saturday" title="Saturday" class="th-first">Sat</th>
             </tr>
         </thead>
+        <a name="#@ViewBag.Month-@ViewBag.Year"></a>
 
         <tbody class="tbody-st">
             @{ var temp = 0; }
             @{ var loopingCounter = 0;}
+            @{ var tempPath = @Request.Url + "#" + (@ViewBag.Month).ToString() + "-" + (@ViewBag.Year).ToString();}
+
             @for (var i = 1; i <= @ViewBag.TotalDays + 6; i += 7)
             {
-            <tr class="tr-st">
-                @for (var j = 0; j < 7; j++)
-                {
+                <tr class="tr-st">
+                    @for (var j = 0; j < 7; j++)
+                    {
 
-                    if (i + j > ViewBag.TotalDays + temp)
-                    {
-                        <td class="emptycells">&nbsp;</td>
-                    }
-                    else if (temp < ViewBag.StartingDay)
-                    {
-                        { temp++; }
-                        <td class="emptycells">&nbsp;</td>
-
-                    }
-                    else
-                    {
-                        if (ViewBag.StartingDate + temp <= (i + j))
+                        if (i + j > ViewBag.TotalDays + temp)
                         {
-
-            <td class="selected" data-flag="false" data-date="@ViewBag.DataYear-@ViewBag.DataMonth-@(i + j - temp)">
-                <a name="#@((i + j - temp).ToString())-@ViewBag.DataMonth"></a>
-                @{ var tempPath = @Request.Url + "#" + ((i + j - temp).ToString() + "-" + (@ViewBag.DataMonth).ToString());}
-                @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
-                @{loopingCounter += 1;}
-            </td>
+                            <td class="emptycells">&nbsp;</td>
                         }
-                        else if (ViewBag.EndingDate <= (i + j - temp))
+                        else if (temp < ViewBag.StartingDay)
                         {
+                            { temp++; }
+                            <td class="emptycells">&nbsp;</td>
 
-            <td class="not-selected">
-                <a name="#@((i + j - temp).ToString())-@ViewBag.DataMonth"></a>
-                @{ var tempPath = @Request.Url + "#" + ((i + j - temp).ToString() + "-" + (@ViewBag.DataMonth).ToString());}
-                @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
-                @{loopingCounter += 1;}
-            </td>
                         }
                         else
                         {
+                            if (ViewBag.StartingDate + temp <= (i + j))
+                            {
+                                if (Model.CalendarForMonth[loopingCounter].IsHoliday == true)
+                                {
+                                    <td style="color: red; background-color: dimgrey;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color: blue; background-color: white;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
 
-            <td class="not-selected">
-                <a name="#@((i + j - temp).ToString())-@ViewBag.DataMonth"></a>
-                @{ var tempPath = @Request.Url + "#" + ((i + j - temp).ToString() + "-" + (@ViewBag.DataMonth).ToString());}
-                @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
-                @{loopingCounter += 1;}
-            </td>
+                                }
+
+                            }
+                            else if (ViewBag.EndingDate <= (i + j - temp))
+                            {
+                                if (Model.CalendarForMonth[loopingCounter].IsHoliday == true)
+                                {
+                                    <td style="color: red; background-color: dimgrey;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color: blue; background-color: white;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
+
+                                }
+
+                            }
+                            else
+                            {
+                                if (Model.CalendarForMonth[loopingCounter].IsHoliday == true)
+                                {
+                                    <td style="color:red; background-color: dimgrey;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color:blue; background-color: white;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+
+                            }
                         }
+
+
                     }
-
-
-                }
-            </tr>
+                </tr>
             }
 
         </tbody>
     </table>
 </div>
+<script>
+    var a = document.querySelector(".main-flex");
+    a.addEventListener('click', function (e) {
+
+        var q = false;
+        if (e.target.getAttribute("data-flag") == "false") {
+            e.target.style.color = "red";
+            e.target.setAttribute("data-flag", "true");
+            q = true;
+        }
+        if (q == false) {
+            e.target.style.color = "blue";
+            e.target.setAttribute("data-flag", "false");
+        }
+    });
+</script>
