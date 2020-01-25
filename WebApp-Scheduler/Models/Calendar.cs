@@ -16,5 +16,10 @@ namespace WebApp_Scheduler.Models
         public DateTime Date { get; set;}
         
     }
-
+    public class DateHelper
+    {
+        public DateTime startdate { get; set; }
+        public DateTime enddate { get; set; }
+        public int ProgramId { get; set; }
+    }
 }

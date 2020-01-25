@@ -1,4 +1,8 @@
-﻿@*<style>
+﻿
+@{
+    Layout = null;
+}
+@*<style>
         .single-ele {
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -178,37 +182,72 @@
             color: dimgrey;
         }
     </style>*@
+
+<style>
+    td {
+        margin: 2px;
+        padding: 15px;
+        max-width: 25px;
+    }
+
+    th {
+        margin: 2px;
+        padding: 15px;
+    }
+    .selected{
+        color: blue;
+    }
+</style>
 <div class="single-ele">
+    <div class="caption-st">
+        <b>@ViewBag.Month / @ViewBag.Year</b>
+    </div>
     <table class="table-st">
-        <caption class="caption-st">
-            <b>@ViewBag.Month / @ViewBag.Year</b>
-        </caption>
+
         <thead class="thread-st">
             <tr class="tr-st">
-                <th class="th-first" abbr="Sunday" title="Sunday"> Sunday </th>
-                <th abbr="Monday" class="th-first" title="Monday"> Monday </th>
-                <th abbr="Tuesday" title="Tuesday" class="th-first"> Tuesday </th>
-                <th abbr="Wednesday" title="Wednesday" class="th-first"> Wednesday </th>
-                <th abbr="Thursday" title="Thursday" class="th-first"> Thursday </th>
-                <th abbr="Friday" title="Friday" class="th-first"> Friday </th>
-                <th abbr="Saturday" title="Saturday" class="th-first"> Saturday </th>
+                <th class="th-first" abbr="Sunday" title="Sunday">Sun</th>
+                <th abbr="Monday" class="th-first" title="Monday">Mon</th>
+                <th abbr="Tuesday" title="Tuesday" class="th-first">Tue</th>
+                <th abbr="Wednesday" title="Wednesday" class="th-first">Wed</th>
+                <th abbr="Thursday" title="Thursday" class="th-first">Thu</th>
+                <th abbr="Friday" title="Friday" class="th-first">Fri</th>
+                <th abbr="Saturday" title="Saturday" class="th-first">Sat</th>
             </tr>
         </thead>
         <tbody class="tbody-st">
+            @{ var temp = 0; }
 
-            @for (var i = 1; i < @ViewBag.TotalDays; i += 7)
+            @for (var i = 1; i <= @ViewBag.TotalDays + 7; i += 7)
             {
                 <tr class="tr-st">
                     @for (var j = 0; j < 7; j++)
                     {
-                        if (ViewBag.StartingDate <= (i + j))
+
+                        if (i + j > ViewBag.TotalDays + temp)
                         {
-                            <td class="not-selected">@(i + j)</td>
+                            <td class="emptycells">&nbsp;</td>
+                        }
+                        else if (temp < ViewBag.StartingDay)
+                        {
+                            { temp++; }
+                            <td class="emptycells">&nbsp;</td>
+
                         }
                         else
                         {
-                            <td>@i</td>
-
+                            if (ViewBag.StartingDate + temp <= (i + j))
+                            {
+                                <td class="selected"> @(i + j - temp)</td>
+                            }
+                            else if (ViewBag.EndingDate <= (i + j - temp))
+                            {
+                                <td class="not-selected">@(i + j - temp)</td>
+                            }
+                            else
+                            {
+                                <td class="not-selected">@(i + j- temp)</td>
+                            }
                         }
                     }
                 </tr>

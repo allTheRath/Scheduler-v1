@@ -78,17 +78,41 @@ namespace WebApp_Scheduler.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ProgramName,ProgramStartDate,ProgramEndDate,TotalTeachingHoursOfDay")] ProgramDetails programDetails)
+        public ActionResult Edit([Bind(Include = "Id,ProgramName,ProgramStartDate,ProgramEndDate,TotalTeachingHoursOfDay")] ProgramDetails program)
         {
-            if (ModelState.IsValid)
+            if (program != null)
             {
-                db.Entry(programDetails).State = EntityState.Modified;
+                ProgramDetails programAlready = db.Programs.Find(program.Id);
+                if (programAlready != null)
+                {
+                    if (program.ProgramEndDate != null)
+                    {
+                        programAlready.ProgramEndDate = program.ProgramEndDate;
+
+                    }
+                    if (program.ProgramStartDate != null)
+                    {
+                        programAlready.ProgramStartDate = program.ProgramStartDate;
+                    }
+                    if (program.StartTime != null)
+                    {
+                        programAlready.StartTime = program.StartTime;
+                    }
+                    if (program.EndTime != null)
+                    {
+                        programAlready.EndTime = program.EndTime;
+                    }
+
+                    programAlready.ProgramName = program.ProgramName;
+                    programAlready.TotalTeachingHoursOfDay = program.TotalTeachingHoursOfDay;
+
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
-            }
-            return View(programDetails);
-        }
 
+            }
+            return View(program);
+        }
         // GET: ProgramDetails/Delete/5
         public ActionResult Delete(int? id)
         {

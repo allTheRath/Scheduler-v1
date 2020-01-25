@@ -35,7 +35,7 @@ namespace WebApp_Scheduler.Controllers
             return View(new List<Course>());
         }
 
-        public ActionResult ProgramDetails(int? Id, string flag = "0")
+        public ActionResult ProgramDetails(int? Id, string flag = "0" , string flag2 = "3")
         {
 
             if (flag == "1")
@@ -50,7 +50,10 @@ namespace WebApp_Scheduler.Controllers
             }
 
             var programOf = db.Programs.Find(Id);
-
+            if(flag2 == "2")
+            {
+                ViewBag.DisplayButton = false;
+            }
             return View(programOf);
         }
 

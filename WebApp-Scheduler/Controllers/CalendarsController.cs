@@ -23,35 +23,66 @@ namespace WebApp_Scheduler.Controllers
             }
             var program = db.Programs.Find(programId);
             ViewBag.ProgramName = program.ProgramName;
-            var calendarList = db.Calendars.Where(x => x.ProgramId == programId).ToList();
+            //var calendarList = db.Calendars.Where(x => x.ProgramId == programId).ToList();
             var firstDate = program.ProgramStartDate.Value;
             var lastDate = program.ProgramEndDate.Value;
-            ViewBag.FirstDate = firstDate;
-            ViewBag.LastDate = lastDate;
-            calendarList.OrderBy(x => x.Date).ToList();
-
-            return View(calendarList);
+            int totalMonths = program.CalculateTotalMonthsOfStudy(program);
+            List<DateTime> dates = new List<DateTime>();
+            //calendarList.OrderBy(x => x.Date).ToList();
+            DateHelper dateHelper = new DateHelper() { startdate = firstDate, enddate = lastDate, ProgramId = program.Id };
+            ViewBag.TotalMonths = totalMonths;
+            return View(dateHelper);
         }
 
         [HttpPost]
-        public ActionResult EditMultiples()
+        public ActionResult EditMultiples(int? dateOfMonth, int? monthOfYear, int? year)
         {
 
             return View();
         }
 
-        public ActionResult Month(int? calenderId)
+        public ActionResult Month(DateTime? startdate, DateTime? enddate, int? monthNum)
         {
-            DateTime month = db.Calendars.Find(calenderId).Date;
+
+            DateTime month = startdate.Value;
+            if (monthNum != null && monthNum != 0)
+            {
+                month = month.AddMonths((int)monthNum);
+                ViewBag.StartingDate = 0;
+                ViewBag.EndingDate = 100;
+            }
+            else if (month != null && monthNum == 0)
+            {
+                ViewBag.StartingDate = (month.Day - 1);
+            }
+            List<DayOfWeek> dayOfWeeks = new List<DayOfWeek>() { DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday };
+            DateTime st = new DateTime(month.Year, month.Month, 1);
+            int startingNumber = 0;
+            for (int d = 0; d < dayOfWeeks.Count(); d++)
+            {
+                if (dayOfWeeks[d] == st.DayOfWeek)
+                {
+                    startingNumber = d;
+                }
+            }
+
+            ViewBag.StartingDay = startingNumber;
+
+            if (month.Month == enddate.Value.Month && month.Year == enddate.Value.Year)
+            {
+                //last month 
+                ViewBag.EndingDate = month.Day + 1;
+            }
+
             if (month.Month == 2)
             {
-                // feb
-                if(month.Year % 4 == 0)
+                if (month.Year % 4 == 0 && month.Year % 100 != 0)
+                {   
+                    ViewBag.TotalDays = 29;
+                }
+                else
                 {
                     ViewBag.TotalDays = 28;
-                } else
-                {
-                    ViewBag.TotalDays = 29;
                 }
             }
             else if (month.Month < 8 && month.Month % 2 == 0)
@@ -62,18 +93,25 @@ namespace WebApp_Scheduler.Controllers
             else if (month.Month < 8 && month.Month % 2 == 1)
             {
                 ViewBag.TotalDays = 31;
-            } else if(month.Month >= 8 && month.Month % 2 == 0)
+            }
+            else if (month.Month >= 8 && month.Month % 2 == 0)
             {
                 ViewBag.TotalDays = 31;
 
-            } else if(month.Month >= 8 && month.Month % 2 == 1)
+            }
+            else if (month.Month >= 8 && month.Month % 2 == 1)
             {
                 ViewBag.TotalDays = 30;
             }
-            ViewBag.StartingDate = (month.Day - 1);
+            else
+            {
+                ViewBag.TotalDays = 0;
+            }
+
             ViewBag.Month = month.ToString("MMMM");
-            ViewBag.Year = month.ToString("YY");
-            return View();
+            ViewBag.Year = month.Year.ToString();
+            ViewBag.Date = startdate.Value;
+            return View(st);
         }
 
         public ActionResult DisplayCal()

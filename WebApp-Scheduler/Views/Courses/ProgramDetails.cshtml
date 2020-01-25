@@ -59,12 +59,15 @@
             </div>
 
         </div>
-
-        <span class="form-group">
-            <span class="col-md-offset-2 col-md-10 btn btn-default" style="max-width: 120px;">
-                @Html.ActionLink(" Change ", "ProgramDetails", new { flag = "1" })
+        @if (ViewBag.DisplayButton != null && ViewBag.DisplayButton != false)
+        {
+            <span class="form-group">
+                <span class="col-md-offset-2 col-md-10 btn btn-default" style="max-width: 120px;">
+                    @Html.ActionLink(" Change ", "ProgramDetails", new { flag = "1" })
+                </span>
             </span>
-        </span>
+        }
+
     </div>
 
 }
