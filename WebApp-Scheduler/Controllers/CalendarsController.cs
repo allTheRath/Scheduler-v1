@@ -15,7 +15,7 @@ namespace WebApp_Scheduler.Controllers
         private ScheduleContext db = new ScheduleContext();
 
         // GET: Calendars
-        public ActionResult Index(int? programId)
+        public ActionResult Index(int? programId, string href="")
         {
             if (programId == null)
             {
@@ -31,17 +31,19 @@ namespace WebApp_Scheduler.Controllers
             //calendarList.OrderBy(x => x.Date).ToList();
             DateHelper dateHelper = new DateHelper() { startdate = firstDate, enddate = lastDate, ProgramId = program.Id };
             ViewBag.TotalMonths = totalMonths;
-            return View(dateHelper);
+            if(href == "")
+            {
+                return View(dateHelper);
+
+            } else
+            {
+                return View(dateHelper);
+
+            }
         }
 
-        [HttpPost]
-        public ActionResult EditMultiples(int? dateOfMonth, int? monthOfYear, int? year)
-        {
 
-            return View();
-        }
-
-        public ActionResult Month(DateTime? startdate, DateTime? enddate, int? monthNum)
+        public ActionResult Month(DateTime? startdate, DateTime? enddate, int? monthNum, int? programId)
         {
 
             DateTime month = startdate.Value;
@@ -77,7 +79,7 @@ namespace WebApp_Scheduler.Controllers
             if (month.Month == 2)
             {
                 if (month.Year % 4 == 0 && month.Year % 100 != 0)
-                {   
+                {
                     ViewBag.TotalDays = 29;
                 }
                 else
@@ -111,13 +113,37 @@ namespace WebApp_Scheduler.Controllers
             ViewBag.Month = month.ToString("MMMM");
             ViewBag.Year = month.Year.ToString();
             ViewBag.Date = startdate.Value;
-            return View(st);
+            ViewBag.DataMonth = month.Month;
+            ViewBag.DataYear = month.Year;
+
+            SelectHolidayHelper selectHolidayHelper = new SelectHolidayHelper();
+            selectHolidayHelper.CalendarForMonth = db.Calendars.Where(x => x.ProgramId == programId && x.Date.Month == month.Month).ToList();
+            selectHolidayHelper.startDate = startdate.Value;
+            selectHolidayHelper.endDate = enddate.Value;
+            return View(selectHolidayHelper);
         }
 
-        public ActionResult DisplayCal()
+        public ActionResult SelectHoliday(int? calendarId, int? dayNum, string previousUri)
         {
-            return View();
+            //DateTime? startdate, DateTime? enddate, int? monthNum, int? programId;
+            var cal = db.Calendars.Find(calendarId);
+           
+            if (cal != null && cal.Date.Day == dayNum)
+            {
+                if (cal.IsHoliday == true)
+                {
+                    cal.IsHoliday = false;
+                }
+                else
+                {
+                    cal.IsHoliday = true;
+                }
+                db.SaveChanges();
+
+            }
+            return Redirect(previousUri.ToString());
         }
+
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public ActionResult Edit([Bind(Include = "Id,IsHoliday,Date")] Calendar calendar)

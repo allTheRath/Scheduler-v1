@@ -22,4 +22,14 @@ namespace WebApp_Scheduler.Models
         public DateTime enddate { get; set; }
         public int ProgramId { get; set; }
     }
+
+    public class SelectHolidayHelper
+    {
+        public List<Calendar> CalendarForMonth { get; set; }
+        
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
+
+    }
+
 }

@@ -189,14 +189,29 @@
         justify-content: space-around;
         align-items: center;
     }
+
+    td {
+        margin: 2px;
+        padding: 15px;
+        max-width: 25px;
+    }
+
+    th {
+        margin: 2px;
+        padding: 15px;
+    }
+
+    .selected {
+        color: blue;
+    }
 </style>
 <div>
     @{
-        Html.RenderAction("ProgramDetails", "Courses", new { Id = Model.ProgramId, flag = "0",flag2 = "2" });
+        Html.RenderAction("ProgramDetails", "Courses", new { Id = Model.ProgramId, flag = "0", flag2 = "2" });
     }
 </div>
 <div class="main-flex">
-    
+
 
     <h2>
         <b>Click on the days to select it as holidays.</b>
@@ -204,9 +219,27 @@
     @for (var i = 0; i <= @ViewBag.TotalMonths; i++)
     {<div>
             @{
-                Html.RenderAction("Month", new { startdate = @Model.startdate, enddate = @Model.enddate, monthNum = i });
+                Html.RenderAction("Month", new { startdate = @Model.startdate, enddate = @Model.enddate, monthNum = i , programId = @Model.ProgramId});
             }
         </div>
     }
 </div>
 
+<script>
+    var a = document.querySelector(".main-flex");
+    a.addEventListener('click', function (e) {
+        var op = e.target.getAttribute("data-date");
+        
+        console.log(e.target.getAttribute("data-date"));
+        var q = false;
+        if (e.target.getAttribute("data-flag") == "false") {
+            e.target.style.color = "red";
+            e.target.setAttribute("data-flag", "true");
+            q = true;
+        }
+        if (q == false) {
+            e.target.style.color = "blue";
+            e.target.setAttribute("data-flag", "false");
+        }
+    });
+</script>
