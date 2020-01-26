@@ -1,60 +1,53 @@
-﻿@model WebApp_Scheduler.Models.CourseWithTimeAllocation
-
-<div>
-    <h4>CourseWithTimeAllocation</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
+﻿@model IEnumerable<WebApp_Scheduler.Models.CourseWithTimeAllocation>
+@{ 
+    Layout = null;
+}
+<div class="table">
+    @*<tr>
+        <th>
             @Html.DisplayNameFor(model => model.TimeAllocationHelperInstance.Id)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TimeAllocationHelperInstance.Id)
-        </dd>
-
-        <dt>
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.ProgramId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ProgramId)
-        </dd>
-
-        <dt>
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.CourseId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CourseId)
-        </dd>
-
-        <dt>
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.CourseName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CourseName)
-        </dd>
-
-        <dt>
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Topic)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Topic)
-        </dd>
-
-        <dt>
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.AmountOfTeachingHours)
-        </dt>
+        </th>
+        <th></th>
+    </tr>*@
 
-        <dd>
-            @Html.DisplayFor(model => model.AmountOfTeachingHours)
-        </dd>
+@foreach (var item in Model) {
+    <span>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.TimeAllocationHelperInstance.Id)
+        </td>*@
+        @*<td>
+            @Html.DisplayFor(modelItem => item.ProgramId)
+        </td>*@
+        @*<td>
+            @Html.DisplayFor(modelItem => item.CourseId)
+        </td>*@
+        <div class="name">
+           Name: @Html.DisplayFor(modelItem => item.CourseName)
+        </div>
+        <div class="name">
+           Topic: @Html.DisplayFor(modelItem => item.Topic)
+        </div>
+        <div>
+           Teaching Hours: @Html.DisplayFor(modelItem => item.AmountOfTeachingHours)
+        </div>
+        <div>
+        </div>
+    </span>
+}
 
-    </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

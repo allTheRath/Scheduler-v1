@@ -178,10 +178,10 @@ namespace WebApp_Scheduler.Controllers
             {
                 var singleDayReference = db.TimeOfCourse.Find(timehelperId);
                 var allCoursesDetails = db.CourseWithTimeAllocations.Where(x => x.TimeAllocationHelperId == singleDayReference.Id).ToList();
-
+                return View(allCoursesDetails);
             }
 
-            return View();
+            return View(new List<CourseWithTimeAllocation>());
         }
 
         public class HelperForPartialDayWithTimeallocationHelper

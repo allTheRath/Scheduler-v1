@@ -8,9 +8,9 @@
         line-height: 22px;
         box-sizing: border-box;
         font-size: 14px;
-        margin-right: 11px;
         margin-bottom: 11px;
-        float: right;
+        margin: auto;
+        padding: 25px;
         width: 100%;
         text-align: center;
     }
@@ -181,6 +181,16 @@
     .not-selected {
         color: red;
     }
+    .body-content {
+        margin-right: 0;
+        margin-left: 0px;
+        padding-right: 3px;
+        padding-left: 11px;
+        /* margin: auto; */
+        width: 100%;
+        text-align: center;
+        overflow: hidden !important;
+    }
 
     .main-flex {
         display: flex;
@@ -188,12 +198,13 @@
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
+        margin: auto;
+        position: relative;
+        max-width: 100%;
     }
 
     td {
         margin: 2px;
-        padding: 15px;
-        max-width: 25px;
     }
 
     th {
@@ -203,6 +214,10 @@
 
     .selected {
         color: blue;
+    }
+
+    body {
+        margin: auto;
     }
 </style>
 <div>
@@ -221,10 +236,6 @@
 </script>
 <div class="main-flex">
 
-
-    <h2>
-        <b>Click on the days to select it as holidays.</b>
-    </h2>
     @for (var i = 0; i <= @ViewBag.TotalMonths; i++)
     {<div>
 
