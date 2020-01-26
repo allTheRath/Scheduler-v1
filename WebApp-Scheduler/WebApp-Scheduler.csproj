@@ -199,6 +199,14 @@
     <Compile Include="Migrations\202001241952237_removinggCalenderTimeline.designer.cs">
       <DependentUpon>202001241952237_removinggCalenderTimeline.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001260148357_newContext.cs" />
+    <Compile Include="Migrations\202001260148357_newContext.designer.cs">
+      <DependentUpon>202001260148357_newContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001260220566_newContextChanges.cs" />
+    <Compile Include="Migrations\202001260220566_newContextChanges.designer.cs">
+      <DependentUpon>202001260220566_newContextChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\Course.cs" />
@@ -262,6 +270,10 @@
     <Content Include="Views\Courses\calenderView.cshtml" />
     <Content Include="Views\Calendars\SingleMonth.cshtml" />
     <Content Include="Views\Calendars\Month.cshtml" />
+    <Content Include="Views\Courses\UpdateCalendar.cshtml" />
+    <Content Include="Views\Courses\MonthView.cshtml" />
+    <Content Include="Views\Courses\AddDetailInCalendar.cshtml" />
+    <Content Include="Views\Courses\PartialDay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -313,6 +325,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001241952237_removinggCalenderTimeline.resx">
       <DependentUpon>202001241952237_removinggCalenderTimeline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001260148357_newContext.resx">
+      <DependentUpon>202001260148357_newContext.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001260220566_newContextChanges.resx">
+      <DependentUpon>202001260220566_newContextChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

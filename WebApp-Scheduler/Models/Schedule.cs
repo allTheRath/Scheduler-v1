@@ -46,12 +46,12 @@ namespace WebApp_Scheduler.Models
 
         public static List<string> GetColumNames()
         {
-            var columnNames = new string[] { "Course Code","Course Name", "Prerequisites Courses", "Instructor Name", "Total teaching hours", "Teaching hours per day", "# Of Teaching Days", "Schedule Type(MWF/TTH) etc", "Starting Date", "Ending Date" };
+            var columnNames = new string[] { "Course Code", "Course Name", "Prerequisites Courses", "Instructor Name", "Total teaching hours", "Teaching hours per day", "# Of Teaching Days", "Schedule Type(MWF/TTH) etc", "Starting Date", "Ending Date" };
 
             return columnNames.ToList();
         }
 
-        public List<string> GetDataFromDatabaseCourses(ScheduleContext db,int programId)
+        public List<string> GetDataFromDatabaseCourses(ScheduleContext db, int programId)
         {
             List<string> data = new List<string>();
             var courses = db.Courses.Where(x => x.ProgramId == programId).ToList();
@@ -106,7 +106,7 @@ namespace WebApp_Scheduler.Models
             int rowLength = table.ColumNames.Count();
             int howmanyRows = table.Data.Count() / rowLength;
 
-            
+
             for (int i = 0; i < table.ColumNames.Count(); i++)
             {
                 xlWorkSheet.Cells[1, i + 1] = table.ColumNames[i];
@@ -123,7 +123,7 @@ namespace WebApp_Scheduler.Models
                         string val = (table.Data[counter]).ToString();
                         if (k == rowLength - 1 || k == rowLength - 2)
                         {
-                            
+
                             xlWorkSheet.Cells[j, k] = val;
 
                         }
@@ -174,11 +174,22 @@ namespace WebApp_Scheduler.Models
         public int ProgramId { get; set; }
         public DateTime Date { get; set; }
         public char Day { get; set; }
-        public List<int> CouresIds { get; set; }
         public int RemainingTime { get; set; }
-
-
+        public List<int> CouresIds { get; set; }
+        public List<int> AllocatedTimes { get; set; }
+        public virtual ICollection<CourseWithTimeAllocation> CourseWithTimeAllocations { get; set; }
     }
 
+    public class CourseWithTimeAllocation
+    {
+        public int Id { get; set; }
+        public int ProgramId { get; set; }
+        public int CourseId { get; set; }
+        public string CourseName { get; set; }
+        public string Topic { get; set; }
+        public int TimeAllocationHelperId { get; set; }
+        public virtual TimeAllocationHelper TimeAllocationHelperInstance { get; set; }
+        public int AmountOfTeachingHours { get; set; }
+    }
 
 }

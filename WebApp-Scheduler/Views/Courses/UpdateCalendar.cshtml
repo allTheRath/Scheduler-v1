@@ -1,0 +1,239 @@
+﻿@model WebApp_Scheduler.Models.DateHelper
+
+<style>
+    .single-ele {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        box-sizing: border-box;
+        font-size: 14px;
+        margin-right: 11px;
+        margin-bottom: 11px;
+        float: right;
+        width: 100%;
+        text-align: center;
+    }
+
+    .table-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        box-sizing: border-box;
+        border-spacing: 0;
+        border-collapse: collapse;
+        background-color: transparent;
+        width: 33vw;
+        height: 33vh;
+        max-width: 600px;
+    }
+
+    .caption-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 22px;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        color: darkslategrey;
+        font-size: 15px;
+        padding-top: 4px;
+        padding-bottom: 8px;
+        text-align: start;
+        display: inline;
+    }
+
+    .thread-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+    }
+
+    .tbody-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+    }
+
+    .tr-st {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        justify-content: space-evenly;
+    }
+
+    .th-first {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        line-height: 24px;
+        height: 24px;
+        color: #a2a2a2;
+        font-style: italic;
+        width: 200px;
+        font-size: 12px;
+    }
+
+    /*.th-rest {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            border-spacing: 0;
+            border-collapse: collapse;
+            box-sizing: border-box;
+            padding: 0;
+            font-size: 12px;
+            text-align: center;
+            color: #686868;
+            width: 30px;
+            line-height: 24px;
+            height: 24px;
+        }*/
+
+    .tr-rest {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #333;
+        line-height: 22px;
+        font-size: 14px;
+        text-align: center;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+    }
+
+    .wknr {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        line-height: 24px;
+        height: 24px;
+        color: #a2a2a2;
+        font-style: italic;
+        width: 36px;
+        font-size: 12px;
+    }
+
+    .emptycells {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        color: #686868;
+        font-size: 14px;
+        width: 30px;
+        line-height: 24px;
+        height: 24px;
+    }
+
+    .td-rest {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        border-spacing: 0;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        padding: 0;
+        text-align: center;
+        color: #686868;
+        font-size: 14px;
+        width: 60px;
+        line-height: 24px;
+        height: 24px;
+    }
+
+    td {
+        background-color: whitesmoke;
+        box-sizing: border-box;
+        border: 1px solid grey;
+        border-radius: 3px 3px;
+    }
+
+    .not-selected {
+        color: red;
+    }
+
+    .main-flex {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    td {
+        margin: 2px;
+        padding: 15px;
+        max-width: 25px;
+    }
+
+    th {
+        margin: 2px;
+        padding: 15px;
+    }
+
+    .selected {
+        color: blue;
+    }
+</style>
+<div>
+    @{
+        Html.RenderAction("ProgramDetails", "Courses", new { Id = Model.ProgramId, flag = "0", flag2 = "2" });
+    }
+</div>
+<script>
+    function pp() {
+        var a = "@Model.url.ToString()";
+        if (a) {
+            window.location.assign(a);
+        }
+    };
+    pp();
+</script>
+<div class="main-flex">
+
+
+    <h2>
+        <b>Click on the days to select it as holidays.</b>
+    </h2>
+    @for (var i = 0; i <= @ViewBag.TotalMonths; i++)
+    {<div>
+
+            @{
+                Html.RenderAction("MonthView", new { startdate = @Model.startdate, enddate = @Model.enddate, monthNum = i, programId = @Model.ProgramId });
+            }
+
+
+        </div>
+    }
+</div>
+

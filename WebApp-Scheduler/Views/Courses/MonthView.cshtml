@@ -1,0 +1,160 @@
+﻿@model WebApp_Scheduler.Models.EditCalendarHelper
+@{
+    Layout = null;
+}
+
+<style>
+</style>
+<div class="single-ele">
+    <div class="caption-st">
+        <b>@ViewBag.Month / @ViewBag.Year</b>
+    </div>
+    <table class="table-st">
+
+        <thead class="thread-st">
+            <tr class="tr-st">
+                <th class="th-first" abbr="Sunday" title="Sunday">Sun</th>
+                <th abbr="Monday" class="th-first" title="Monday">Mon</th>
+                <th abbr="Tuesday" title="Tuesday" class="th-first">Tue</th>
+                <th abbr="Wednesday" title="Wednesday" class="th-first">Wed</th>
+                <th abbr="Thursday" title="Thursday" class="th-first">Thu</th>
+                <th abbr="Friday" title="Friday" class="th-first">Fri</th>
+                <th abbr="Saturday" title="Saturday" class="th-first">Sat</th>
+            </tr>
+        </thead>
+        <a name="#@ViewBag.Month-@ViewBag.Year"></a>
+
+        <tbody class="tbody-st">
+            @{ var temp = 0; }
+            @{ var loopingCounter = 0;}
+            @{ var tempPath = @Request.Url + "#" + (@ViewBag.Month).ToString() + "-" + (@ViewBag.Year).ToString();}
+
+            @for (var i = 1; i <= @ViewBag.TotalDays + 6; i += 7)
+            {
+                <tr class="tr-st">
+                    @for (var j = 0; j < 7; j++)
+                    {
+
+                        if (i + j > ViewBag.TotalDays + temp)
+                        {
+                            <td class="emptycells">&nbsp;</td>
+                        }
+                        else if (temp < ViewBag.StartingDay)
+                        {
+                            { temp++; }
+                            <td class="emptycells">&nbsp;</td>
+
+                        }
+                        else
+                        {
+                            if (ViewBag.StartingDate + temp <= (i + j))
+                            {
+                                if (Model.holidays[loopingCounter] == true)
+                                {
+                                    <td style="color: red; background-color: dimgrey;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = @Model.DateHelper[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color: blue; background-color: white;" data-flag="false">
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = @Model.DateHelper[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @{loopingCounter += 1;}
+                                    </td>
+
+                                }
+
+                            }
+                            else if (ViewBag.EndingDate <= (i + j - temp))
+                            {
+                                if (Model.holidays[loopingCounter] == true)
+                                {
+                                    <td style="color: red; background-color: dimgrey;" data-flag="false">
+                                        <span class="display-dateNum">
+                                            @(i + j - temp)
+                                        </span>
+                                        <div class="single-day-edit">
+                                            @{
+                                                Html.RenderAction("PartialDay", new { timehelperId = Model.DateHelper[loopingCounter].Id });
+                                            }
+                                        </div>
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color: blue; background-color: white;" data-flag="false">
+                                        <span class="display-dateNum">
+                                            @(i + j - temp)
+                                        </span>
+                                        <div class="single-day-edit">
+                                            @{
+                                                Html.RenderAction("PartialDay", new { timehelperId = Model.DateHelper[loopingCounter].Id });
+                                            }
+                                        </div>
+                                        @{loopingCounter += 1;}
+                                    </td>
+
+                                }
+
+                            }
+                            else
+                            {
+                                if (Model.holidays[loopingCounter] == true)
+                                {
+                                    <td style="color:red; background-color: dimgrey;" data-flag="false">
+                                        <span class="display-dateNum">
+                                            @(i + j - temp)
+                                        </span>
+                                        <div class="single-day-edit">
+                                            @{
+                                                Html.RenderAction("PartialDay", new { timehelperId = Model.DateHelper[loopingCounter].Id });
+                                            }
+                                        </div>
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color:blue; background-color: white;" data-flag="false">
+                                        <span class="display-dateNum">
+                                            @(i + j - temp)
+                                        </span>
+                                        <div class="single-day-edit">
+                                            @{
+                                                Html.RenderAction("PartialDay", new { timehelperId = Model.DateHelper[loopingCounter].Id });
+                                            }
+                                        </div>
+                                        @{loopingCounter += 1;}
+                                    </td>
+                                }
+
+                            }
+                        }
+
+
+                    }
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<script>
+    var a = document.querySelector(".main-flex");
+    a.addEventListener('click', function (e) {
+
+        var q = false;
+        if (e.target.getAttribute("data-flag") == "false") {
+            e.target.style.color = "red";
+            e.target.setAttribute("data-flag", "true");
+            q = true;
+        }
+        if (q == false) {
+            e.target.style.color = "blue";
+            e.target.setAttribute("data-flag", "false");
+        }
+    });
+</script>
+

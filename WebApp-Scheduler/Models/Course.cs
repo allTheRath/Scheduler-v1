@@ -143,7 +143,7 @@ namespace WebApp_Scheduler.Models
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Calendar> Calendars { get; set; }
         public DbSet<TimeAllocationHelper> TimeOfCourse { get; set; }
-
+        public DbSet<CourseWithTimeAllocation> CourseWithTimeAllocations { get; set; }
     }
     public class CourseSelectionViewModel
     {

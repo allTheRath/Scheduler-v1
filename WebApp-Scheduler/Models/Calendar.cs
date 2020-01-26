@@ -27,10 +27,18 @@ namespace WebApp_Scheduler.Models
     public class SelectHolidayHelper
     {
         public List<Calendar> CalendarForMonth { get; set; }
-        
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
 
     }
 
+    public class EditCalendarHelper
+    {
+        public List<TimeAllocationHelper> DateHelper { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
+
+        public List<bool> holidays { get; set; }
+
+    }
 }

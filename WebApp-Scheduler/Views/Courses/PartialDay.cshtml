@@ -1,0 +1,60 @@
+﻿@model WebApp_Scheduler.Models.CourseWithTimeAllocation
+
+<div>
+    <h4>CourseWithTimeAllocation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeAllocationHelperInstance.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TimeAllocationHelperInstance.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProgramId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProgramId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CourseId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CourseId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CourseName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CourseName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Topic)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Topic)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountOfTeachingHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AmountOfTeachingHours)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
