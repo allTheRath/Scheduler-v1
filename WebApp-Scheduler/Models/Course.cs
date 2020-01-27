@@ -152,6 +152,18 @@ namespace WebApp_Scheduler.Models
 
     }
 
+    public class CourseWithTimeAllocationsViewModel
+    {
+        public int Id { get; set; }
+        public string Course { get; set; }
+        public int TeachingHours { get; set; }
+        public string Topic { get; set; }
+        public int TimeAllocationHelperId { get; set; }
+
+        public string url { get; set; }
+        public bool Delete { get; set; }
+    }
+
     public class ListOfCourseSelectionViewModel
     {
         public int CourseId { get; set; }

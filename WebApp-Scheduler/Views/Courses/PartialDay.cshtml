@@ -1,53 +1,60 @@
 ﻿@model IEnumerable<WebApp_Scheduler.Models.CourseWithTimeAllocation>
-@{ 
+@{
     Layout = null;
 }
 <div class="table">
     @*<tr>
-        <th>
-            @Html.DisplayNameFor(model => model.TimeAllocationHelperInstance.Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProgramId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CourseId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CourseName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Topic)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AmountOfTeachingHours)
-        </th>
-        <th></th>
-    </tr>*@
+            <th>
+                @Html.DisplayNameFor(model => model.TimeAllocationHelperInstance.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProgramId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Topic)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountOfTeachingHours)
+            </th>
+            <th></th>
+        </tr>*@
+    @{ var counterAt = 0;}
 
-@foreach (var item in Model) {
-    <span>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.TimeAllocationHelperInstance.Id)
-        </td>*@
-        @*<td>
-            @Html.DisplayFor(modelItem => item.ProgramId)
-        </td>*@
-        @*<td>
-            @Html.DisplayFor(modelItem => item.CourseId)
-        </td>*@
-        <div class="name">
-           Name: @Html.DisplayFor(modelItem => item.CourseName)
-        </div>
-        <div class="name">
-           Topic: @Html.DisplayFor(modelItem => item.Topic)
-        </div>
-        <div>
-           Teaching Hours: @Html.DisplayFor(modelItem => item.AmountOfTeachingHours)
-        </div>
-        <div>
-        </div>
-    </span>
-}
+    @foreach (var item in Model)
+    {
+        { counterAt += 1; }
+        <span class="@counterAt">
 
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.TimeAllocationHelperInstance.Id)
+                </td>*@
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.ProgramId)
+                </td>*@
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.CourseId)
+                </td>*@
+            <div class="name">
+                Name: @Html.DisplayFor(modelItem => item.CourseName)
+            </div>
+            <div class="name">
+                Topic: @Html.DisplayFor(modelItem => item.Topic)
+            </div>
+            <div>
+                Teaching Hours: @Html.DisplayFor(modelItem => item.AmountOfTeachingHours)
+            </div>
+            <div class="edit-btn-c" style="padding-top:2px;">
+                @Html.ActionLink("Edit", "EditDay", new { id = item.Id,url=@Request.Url})
+            </div>
+            @*@using (Html.BeginForm("EditDay", "Courses", FormMethod.Get))*@
+
+
+        </span>
+    }
 </div>

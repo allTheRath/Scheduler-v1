@@ -3,15 +3,12 @@
 @{
     ViewBag.Title = "Index";
 }
-<style>
-    body{
-        background-color: whitesmoke;
-    }
-</style>
-<p class="btn btn-default" style="margin: 5px;">
-    @Html.ActionLink("Create Program","Create","ProgramDetails") ||
-    @Html.ActionLink("Create Course", "Create", "Courses")
+<p style="margin: 5px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: chocolate;">
+    @Html.ActionLink("Calculate Schedule", "CalculateSchedule", new { programId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" }) ||
+    @Html.ActionLink("See Calendar", "UpdateCalendar", "Courses", new { programId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" }) ||
+    @Html.ActionLink("Generate Calendar", "ProgramTimeline", "Calendars", new { ProgramId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" })
 </p>
+
 <table class="table">
     <tr>
 
@@ -94,19 +91,14 @@
         Html.RenderAction("ProgramDetails", new { Id = (Model.ToList())[0].ProgramId });
     }
 </p>
-<p style=" font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: chocolate;">
-    @Html.ActionLink("Calculate Schedule", "CalculateSchedule", new { programId = (Model.ToList())[0].ProgramId },new { @class="btn btn-default"}) ||
-    @Html.ActionLink("See Calendar", "UpdateCalendar", "Courses", new { programId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" }) ||
-    @Html.ActionLink("Generate Calendar", "ProgramTimeline", "Calendars", new { ProgramId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" })
 <p>
 
     To generate Excel Data please click @Html.ActionLink("generate", "Index", "Schedules", new { programId = (Model.ToList())[0].ProgramId }, new { @class = "btn btn-default" })
     Files are generated in Excel Folder on server.
 </p>
-</p>
 
 
-<p style="background-color: white;">
+<p style="background-color: white; width: 100%;">
     How to use: Create a program if not present >> Add course details in program >> Generate Calendar ( Select holidays for the time line.) >> Calculate Schedule >> See the calendar in Calender.
     If you are running this application for first time please click @Html.ActionLink("here", "InitialDatabaseEntries")
 </p>

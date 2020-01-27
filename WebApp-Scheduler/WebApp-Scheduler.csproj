@@ -149,6 +149,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CalendarsController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\CourseWithTimeAllocationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProgramDetailsController.cs" />
     <Compile Include="Controllers\SchedulesController.cs" />
@@ -274,6 +275,12 @@
     <Content Include="Views\Courses\MonthView.cshtml" />
     <Content Include="Views\Courses\AddDetailInCalendar.cshtml" />
     <Content Include="Views\Courses\PartialDay.cshtml" />
+    <Content Include="Views\CourseWithTimeAllocations\Create.cshtml" />
+    <Content Include="Views\CourseWithTimeAllocations\Delete.cshtml" />
+    <Content Include="Views\CourseWithTimeAllocations\Details.cshtml" />
+    <Content Include="Views\CourseWithTimeAllocations\Edit.cshtml" />
+    <Content Include="Views\CourseWithTimeAllocations\Index.cshtml" />
+    <Content Include="Views\Courses\EditDay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

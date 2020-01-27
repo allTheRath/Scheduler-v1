@@ -139,7 +139,7 @@ namespace WebApp_Scheduler.Controllers
             {
                 if (haveDates.Contains(tempStartDate) == false)
                 {
-                    TimeAllocationHelper tempAllocator = new TimeAllocationHelper() { Id = 0, Date = tempStartDate,  Day = 'N', ProgramId = programId.Value };
+                    TimeAllocationHelper tempAllocator = new TimeAllocationHelper() { Id = 0, Date = tempStartDate, Day = 'N', ProgramId = programId.Value };
                     allAssignedTimeTable.Add(tempAllocator);
                 }
 
@@ -174,7 +174,7 @@ namespace WebApp_Scheduler.Controllers
 
         public ActionResult PartialDay(int? timehelperId)
         {
-            if(timehelperId != null && timehelperId != 0)
+            if (timehelperId != null && timehelperId != 0)
             {
                 var singleDayReference = db.TimeOfCourse.Find(timehelperId);
                 var allCoursesDetails = db.CourseWithTimeAllocations.Where(x => x.TimeAllocationHelperId == singleDayReference.Id).ToList();
@@ -218,6 +218,59 @@ namespace WebApp_Scheduler.Controllers
             }
             return RedirectToAction("UpdateCalendar", new { programId = cal.ProgramId, url = previousUri.ToString() });
 
+        }
+
+        public ActionResult EditDay(int? id, string url = "")
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            CourseWithTimeAllocation courseWithTimeAllocation = db.CourseWithTimeAllocations.Find(id);
+            if (courseWithTimeAllocation == null)
+            {
+                return HttpNotFound();
+            }
+
+            CourseWithTimeAllocationsViewModel courseWithTimeAllocationsViewModel = new CourseWithTimeAllocationsViewModel() { Id = courseWithTimeAllocation.Id, Course = courseWithTimeAllocation.CourseName, Delete = false, TeachingHours = courseWithTimeAllocation.AmountOfTeachingHours, Topic = courseWithTimeAllocation.Topic, TimeAllocationHelperId = courseWithTimeAllocation.TimeAllocationHelperId, url = url };
+
+            return View(courseWithTimeAllocationsViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditDay([Bind(Include = "Id,TimeAllocationHelperId,url,Course,Topic,TeachingHours,Delete")] CourseWithTimeAllocationsViewModel courseWithTimeAllocation)
+        {
+
+            var temp = courseWithTimeAllocation;
+            if (courseWithTimeAllocation != null && courseWithTimeAllocation.Delete == false)
+            {
+                var instanceOfTimeAllocationForCourse = db.CourseWithTimeAllocations.Find(courseWithTimeAllocation.Id);
+                instanceOfTimeAllocationForCourse.CourseName = courseWithTimeAllocation.Course;
+                instanceOfTimeAllocationForCourse.Topic = courseWithTimeAllocation.Topic;
+                instanceOfTimeAllocationForCourse.AmountOfTeachingHours = courseWithTimeAllocation.TeachingHours;
+                db.SaveChanges();
+            }
+            if (courseWithTimeAllocation.Delete == true)
+            {
+                var instanceOfTimeAllocationToDelete = db.CourseWithTimeAllocations.Find(courseWithTimeAllocation.Id);
+                db.CourseWithTimeAllocations.Remove(instanceOfTimeAllocationToDelete);
+                db.SaveChanges();
+
+            }
+            if (temp != null)
+            {
+
+                var timeInstanceForRedirectionByDate = db.TimeOfCourse.Find(courseWithTimeAllocation.TimeAllocationHelperId);
+                DateTime monthToGoTo = timeInstanceForRedirectionByDate.Date;
+                
+                string path = temp.url + "#" + monthToGoTo.ToString("MMMM")+ "-" + monthToGoTo.Year.ToString();
+                return Redirect(path);
+
+            }
+
+
+            return View(courseWithTimeAllocation);
         }
 
         public ActionResult ProgramDetails(int? Id, string flag = "0", string flag2 = "3")
@@ -600,7 +653,7 @@ namespace WebApp_Scheduler.Controllers
                     {
                         day.CouresIds = new List<int>();
                     }
-                    if(day.AllocatedTimes == null)
+                    if (day.AllocatedTimes == null)
                     {
                         day.AllocatedTimes = new List<int>();
                     }
@@ -614,7 +667,7 @@ namespace WebApp_Scheduler.Controllers
 
                         if (day.RemainingTime - courseInput.HoursPerDay > 0)
                         {
-                            
+
                             day.CouresIds.Add(courseIDToAssignTime);
                             day.AllocatedTimes.Add(courseInput.HoursPerDay);
                             day.RemainingTime -= courseInput.HoursPerDay;
@@ -752,7 +805,7 @@ namespace WebApp_Scheduler.Controllers
                                         }
                                         else
                                         {
-                                         
+
                                             day.CouresIds.Add(courseIDToAssignTime);
                                             day.AllocatedTimes.Add(day.RemainingTime);
                                             c.OverallTotalHours -= day.RemainingTime;
@@ -820,7 +873,7 @@ namespace WebApp_Scheduler.Controllers
             }
             db.SaveChanges();
             var previouseCalculatedInstances = db.CourseWithTimeAllocations.Where(x => x.ProgramId == program.Id).ToList();
-            foreach(var op in previouseCalculatedInstances)
+            foreach (var op in previouseCalculatedInstances)
             {
                 db.CourseWithTimeAllocations.Remove(op);
             }
@@ -832,7 +885,7 @@ namespace WebApp_Scheduler.Controllers
             db.SaveChanges();
 
             var newInstancesOfTimeOfCourse = db.TimeOfCourse.Where(x => x.ProgramId == program.Id).ToList();
-            foreach(var newIns in newInstancesOfTimeOfCourse)
+            foreach (var newIns in newInstancesOfTimeOfCourse)
             {
                 var op = daysOfStudy.Find(x => x.Date == newIns.Date);
                 if (op != null && op.CouresIds != null)
@@ -854,10 +907,10 @@ namespace WebApp_Scheduler.Controllers
 
                     }
                 }
-                
+
 
             }
-            
+
             return RedirectToAction("Index", new { IdOfProgram = program.Id });
         }
 

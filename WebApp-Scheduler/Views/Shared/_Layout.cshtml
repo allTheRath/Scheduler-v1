@@ -7,9 +7,14 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
+<style>
+    body {
+        background-color: #fff;
+    }
+</style>
 <body>
     
-    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#fff;">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:rgb(0, 109, 93);">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -18,13 +23,13 @@
                     <span class="icon-bar"></span>
                 </button>
                 <span class="hover-a">
-                    @Html.ActionLink("Scheduler", "Index", "ProgramDetails", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink(" Programs ", "Index", "ProgramDetails", new { area = "" }, new { @class = "navbar-brand" })
                 </span>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav" style="color: #514f51;">
-                    <li class="hover-a">@Html.ActionLink("Programs", "Index", "ProgramDetails")</li>
-                    <li class="hover-a">@Html.ActionLink("Add-Course", "Create", "Courses")</li>
+                    <li class="hover-a">@Html.ActionLink("Create-Program", "Index", "ProgramDetails")</li>
+                    <li class="hover-a">@Html.ActionLink("Create-Course", "Create", "Courses")</li>
                     @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                 </ul>
             </div>
