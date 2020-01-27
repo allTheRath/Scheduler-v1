@@ -298,8 +298,8 @@ namespace WebApp_Scheduler.Controllers
                 var instanceOfCourseDataHelper = db.ScheduleHelperContextPerCourse.Where(x => x.courseId == instanceOfTimeAllocationForCourse.CourseId).ToList().FirstOrDefault();
                 // negative
                 instanceOfCourseDataHelper.OverallTotalHours += previousHoursForDay - courseWithTimeAllocation.TeachingHours;
-                
-             
+
+
                 db.SaveChanges();
             }
             if (courseWithTimeAllocation.Delete == true)
@@ -386,10 +386,10 @@ namespace WebApp_Scheduler.Controllers
         public ActionResult InitialDatabaseEntries()
         {
             var teachingDaysOption = db.TeachingDays.ToList();
-            if (teachingDaysOption != null && teachingDaysOption.Count() != 0)
-            {
-                return RedirectToAction("Index", "Programs");
-            }
+            //if (teachingDaysOption != null && teachingDaysOption.Count() != 0)
+            //{
+            //    return RedirectToAction("Index", "Programs");
+            //}
 
             char[] days = new char[] { 'M', 'T', 'W', 'R', 'F' };
             HashSet<string> options = new HashSet<string>();
@@ -397,19 +397,22 @@ namespace WebApp_Scheduler.Controllers
             for (int i = 0; i < days.Length; i++)
             {
                 int counter = 1;
-
-
+                string op = "";
+                op += "" + days[i];
                 while (counter <= days.Length)
                 {
-                    string op = "";
-                    for (int k = i; k < counter; k++)
+
+                    for (int k = i + 1; k < counter; k++)
                     {
                         op += days[k];
+                        if (op != "")
+                        {
+                            options.Add(op);
+                        }
+
                     }
-                    if (op != "")
-                    {
-                        options.Add(op);
-                    }
+                    op = "" + days[i];
+
                     counter++;
 
                 }
@@ -419,7 +422,7 @@ namespace WebApp_Scheduler.Controllers
 
             for (int i = 0; i < days.Length; i++)
             {
-                for (int j = 0; j < days.Length; j++)
+                for (int j = days.Length - 1; j > 0; j--)
                 {
                     if (i != j)
                     {
@@ -428,20 +431,41 @@ namespace WebApp_Scheduler.Controllers
                     }
                 }
             }
+
+            options.Add("MWF");
+            options.Add("TWF");
+
+            options.Add("WRF");
+            options.Add("TWR");
+            options.Add("TRF");
+            options.Add("MRF");
+            options.Add("MTW");
+            options.Add("MWF");
+            options.Add("MRF");
+            options.Add("MTR");
+            options.Add("MTF");
+            options.Add("TWF");
+            options.Add("WRF");
+
             foreach (var op in options)
             {
-                db.TeachingDays.Add(new ScheduleType() { DayOption = op });
+                if (teachingDaysOption.Where(x => x.DayOption == op).FirstOrDefault() == null)
+                {
+                    db.TeachingDays.Add(new ScheduleType() { DayOption = op });
+                    db.SaveChanges();
+                } else
+                {
+                    //just in case multiple entries present.
+                    var extra = teachingDaysOption.Where(x => x.DayOption == op).ToList();
+                    for(var j = 1; j < extra.Count(); j++)
+                    {
+                        db.TeachingDays.Remove(extra[j]);
+                    }
+                    db.SaveChanges();
+                }
             }
-            ProgramDetails program = new ProgramDetails();
-            program.ProgramName = "";
-            program.ProgramStartDate = DateTime.Now;
-            program.ProgramEndDate = DateTime.Now;
-            db.Programs.Add(program);
 
-            db.SaveChanges();
-            var proId = db.Programs.FirstOrDefault();
-
-            return RedirectToAction("Index", new { IdOfProgram = proId.Id });
+            return RedirectToAction("Index", "ProgramDetails");
         }
 
         // GET: Courses/Details/5
@@ -506,7 +530,8 @@ namespace WebApp_Scheduler.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ScheduleTypeId = new SelectList(db.TeachingDays, "Id", "DayOption", course.ScheduleTypeId);
+            var selectDayOptions = db.TeachingDays.OrderBy(X => X.DayOption.Length).ToList();
+            ViewBag.ScheduleTypeId = new SelectList(selectDayOptions, "Id", "DayOption", course.ScheduleTypeId);
             return View(course);
         }
 
