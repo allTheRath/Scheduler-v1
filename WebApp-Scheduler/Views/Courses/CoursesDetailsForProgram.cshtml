@@ -1,0 +1,44 @@
+﻿@model IEnumerable<WebApp_Scheduler.Models.ScheduleHelperContextData>
+@{
+    Layout = null;
+}
+<div class="table" style="background-color: whitesmoke; display: flex; flex-direction: row; justify-content: space-evenly; flex-wrap: wrap;">
+
+    @foreach (var item in Model)
+    {<hr style="color: grey; margin: 5px; " />
+        <div style="margin: 5px; padding: 2px; border: 1px solid grey;display: flex; flex-direction: column; max-width: 100%; margin: auto; color:darkslateblue; justify-content: space-between; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+            <div>
+                Course Name: @(item.CourseName)
+            </div>
+            <div>
+                Teaching Days: @(item.TeachingDays)
+            </div>
+            <div>
+                Total Teaching Hours Per Day: @(item.TotalHoursPerDay)
+            </div>
+            @if (item.OverallTotalHours > 0)
+            {
+                <div style="background-color: #ADD8E6;">
+                    Unallocated Hours Of Teaching: @(item.OverallTotalHours)
+                </div>
+            }
+            else if (item.OverallTotalHours < 0)
+            {
+                <div style="background-color: #E23D28;">
+                    Extra allocated Hours Of Teaching (Negative): @(item.OverallTotalHours)
+                </div>
+            }
+            else
+            {
+                <div style="background-color: #74C365;">
+                    All hours of course has been assigned.
+                </div>
+            }
+
+            <div>
+                # Of Teachign Days: @(item.NoOfTeachingDays)
+            </div>
+        </div>
+    }
+
+</div>

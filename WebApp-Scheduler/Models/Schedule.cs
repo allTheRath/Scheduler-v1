@@ -11,7 +11,7 @@ using System.Web.Helpers;
 using System.Net;
 using System.Net.Http;
 using System.Web.Mvc;
-
+using System.ComponentModel;
 
 namespace WebApp_Scheduler.Models
 {
@@ -33,8 +33,11 @@ namespace WebApp_Scheduler.Models
 
     public class CourseDataHelperViewModel
     {
+        [DisplayName("Course Name")]
         public int CourseId { get; set; }
+        [DisplayName("Start Date")]
         public DateTime? StartDate { get; set; }
+        [DisplayName("End Date")]
         public DateTime? EndDate { get; set; }
     }
 
@@ -168,6 +171,20 @@ namespace WebApp_Scheduler.Models
         public int NoOfTeachingDays { get; set; }
         public List<int> PrerequsiteCourseIds { get; set; }
     }
+
+    public class ScheduleHelperContextData
+    {
+        public int Id { get; set; }
+        public int courseId { get; set; }
+        [DisplayName("Course Name")]
+        public string CourseName { get; set; }
+        [DisplayName("Day Options")]
+        public string TeachingDays { get; set; }
+        public int TotalHoursPerDay { get; set; }
+        public int OverallTotalHours { get; set; }
+        public int NoOfTeachingDays { get; set; }
+        public int ProgramId { get; set; }
+    }
     public class TimeAllocationHelper
     {
         public int Id { get; set; }
@@ -183,12 +200,15 @@ namespace WebApp_Scheduler.Models
     public class CourseWithTimeAllocation
     {
         public int Id { get; set; }
+        [DisplayName("Program")]
         public int ProgramId { get; set; }
         public int CourseId { get; set; }
+        [DisplayName("Course Name")]
         public string CourseName { get; set; }
         public string Topic { get; set; }
         public int TimeAllocationHelperId { get; set; }
         public virtual TimeAllocationHelper TimeAllocationHelperInstance { get; set; }
+        [DisplayName("Teaching Hours in a Day")]
         public int AmountOfTeachingHours { get; set; }
     }
 

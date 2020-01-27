@@ -11,6 +11,7 @@ namespace WebApp_Scheduler.Models
         // program calendar
         public int Id { get; set; }
         public char Day { get; set; }
+        [DisplayName("Program ")]
         public int ProgramId { get; set; }
         public bool IsHoliday { get; set; }
         public bool IsChanged { get; set; }
@@ -35,6 +36,7 @@ namespace WebApp_Scheduler.Models
     public class HelperForPartialDayWithTimeallocationHelper
     {
         public int Id { get; set; }
+        [DisplayName("Program")]
         public int ProgramId { get; set; }
         public DateTime Date { get; set; }
         public char Day { get; set; }
@@ -55,8 +57,10 @@ namespace WebApp_Scheduler.Models
         [DisplayName("Course ")]
         public int Id { get; set; }
         public string Topic { get; set; }
+        [DisplayName("Teaching Hours")]
         public int AmountOfTeachingHours { get; set; }
         public int TimeAllocationId { get; set; }
+        [DisplayName("Remaining Time")]
         public int RemainingTime { get; set; }
         public string url { get; set; }
     }
@@ -68,6 +72,10 @@ namespace WebApp_Scheduler.Models
         public DateTime endDate { get; set; }
         public int ProgramTeachingHoursPerDay { get; set; }
         public List<bool> holidays { get; set; }
+
+        public int month { get; set; }
+        public int year { get; set; }
+        public int ProgramId { get; set; }
 
     }
 }

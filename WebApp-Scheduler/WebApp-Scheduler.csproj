@@ -208,6 +208,14 @@
     <Compile Include="Migrations\202001260220566_newContextChanges.designer.cs">
       <DependentUpon>202001260220566_newContextChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001271755573_removedCourseHelperDataContextOf.cs" />
+    <Compile Include="Migrations\202001271755573_removedCourseHelperDataContextOf.designer.cs">
+      <DependentUpon>202001271755573_removedCourseHelperDataContextOf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001271758497_addedCourseHelperDataContextOfData.cs" />
+    <Compile Include="Migrations\202001271758497_addedCourseHelperDataContextOfData.designer.cs">
+      <DependentUpon>202001271758497_addedCourseHelperDataContextOfData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\Course.cs" />
@@ -280,8 +288,9 @@
     <Content Include="Views\CourseWithTimeAllocations\Details.cshtml" />
     <Content Include="Views\CourseWithTimeAllocations\Edit.cshtml" />
     <Content Include="Views\CourseWithTimeAllocations\Index.cshtml" />
-    <Content Include="Views\Courses\EditDay.cshtml" />
     <Content Include="Views\Courses\AddHoursInDay.cshtml" />
+    <Content Include="Views\Courses\CoursesDetailsForProgram.cshtml" />
+    <Content Include="Views\Courses\EditDay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -339,6 +348,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001260220566_newContextChanges.resx">
       <DependentUpon>202001260220566_newContextChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001271755573_removedCourseHelperDataContextOf.resx">
+      <DependentUpon>202001271755573_removedCourseHelperDataContextOf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001271758497_addedCourseHelperDataContextOfData.resx">
+      <DependentUpon>202001271758497_addedCourseHelperDataContextOfData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

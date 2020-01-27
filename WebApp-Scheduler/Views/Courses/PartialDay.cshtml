@@ -63,26 +63,29 @@
         </span>
 
     }
-<div class="shadow">
-    @if((int)@ViewBag.ProgramTeachingHoursPerDay == 0)
-    {
-        <div></div>
-    }
-    else if ((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay > 0)
-    {
-    <div style="color: lightgrey; background-color: lightcyan;">
-        Rem-Hours: @((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay)
-        @Html.ActionLink("Add-Hours","AddHoursInDay",new { TimeAllocationHelperId = tempTimeAllocationHelperId, url=Request.Url}) 
+    @{ var IdOfTimeAllocation = (int)ViewBag.TimeId;}
+
+    <div class="shadow">
+        @if ((int)@ViewBag.ProgramTeachingHoursPerDay == 0)
+        {
+            <div></div>
+        }
+        else if ((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay > 0)
+        {
+            <div style="color: lightgrey; background-color: lightcyan;">
+                Rem-Hours: @((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay)
+                @Html.ActionLink("Add-Hours", "AddHoursInDay", new { TimeAllocationHelperId = IdOfTimeAllocation, url = Request.Url })
+            </div>
+        }
+        else if ((int)@ViewBag.ProgramTeachingHoursPerDay < tempTotalAllocatedHrsOfDay)
+        {
+            <div style="color: white; background-color: red;">
+                Total-Hrs-Of-Day: @(ViewBag.ProgramTeachingHoursPerDay) || Allocated-Hrs: @(tempTotalAllocatedHrsOfDay)
+            </div>
+        }
+        else if ((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay == 0)
+        {
+            <div style="background-color: green; color: grey;">Ok</div>
+        }
     </div>
-    }
-    else if ((int)@ViewBag.ProgramTeachingHoursPerDay < tempTotalAllocatedHrsOfDay)
-    {
-    <div style="color: white; background-color: red;">
-        Total-Hrs-Of-Day: @(ViewBag.ProgramTeachingHoursPerDay) || Allocated-Hrs: @(tempTotalAllocatedHrsOfDay)
-    </div>
-    } else if((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay == 0)
-    {
-        <div style="background-color: green; color: grey;">Ok</div>
-    }
-</div>
 </div>

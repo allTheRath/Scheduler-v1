@@ -22,7 +22,7 @@ namespace WebApp_Scheduler.Models
         [DisplayName("Program End Date")]
         public DateTime? ProgramEndDate { get; set; }
 
-        [DisplayName("Hours Of Teaching Per Day")]
+        [DisplayName("Hours Of Teaching in a Day")]
         public int TotalTeachingHoursOfDay { get; set; }
 
         [DataType(DataType.Time)]
@@ -99,7 +99,7 @@ namespace WebApp_Scheduler.Models
         public string Instructor { get; set; }
         [DisplayName("Total Teaching Hours")]
         public int ContactHours { get; set; }
-        [DisplayName("Teaching Hours Per Day")]
+        [DisplayName("Teaching Hours in a Day")]
         public int HoursPerDay { get; set; }
         [DisplayName("# Of Teaching Days")]
         public int? NumberOfDays { get; set; }
@@ -109,7 +109,7 @@ namespace WebApp_Scheduler.Models
         [DataType(DataType.Date)]
         [DisplayName("Ending Date")]
         public DateTime? EndDate { get; set; }
-        [DisplayName("Schedule Type(MWF/TTH etc)")]
+        [DisplayName("Teaching Days")]
         public int ScheduleTypeId { get; set; }
         public virtual ScheduleType ScheduleType { get; set; }
         [DisplayName("Program")]
@@ -128,6 +128,7 @@ namespace WebApp_Scheduler.Models
     {
 
         public int Id { get; set; }
+        [DisplayName("Day selection")]
         public string DayOption { get; set; }
         public virtual ICollection<Course> CoursesWithScheduleType { get; set; }
 
@@ -144,10 +145,12 @@ namespace WebApp_Scheduler.Models
         public DbSet<Calendar> Calendars { get; set; }
         public DbSet<TimeAllocationHelper> TimeOfCourse { get; set; }
         public DbSet<CourseWithTimeAllocation> CourseWithTimeAllocations { get; set; }
+        public DbSet<ScheduleHelperContextData> ScheduleHelperContextPerCourse { get; set; }
     }
     public class CourseSelectionViewModel
     {
         public int Id { get; set; }
+        [DisplayName("Course Name")]
         public string CourseName { get; set; }
 
     }
@@ -155,7 +158,9 @@ namespace WebApp_Scheduler.Models
     public class CourseWithTimeAllocationsViewModel
     {
         public int Id { get; set; }
+        [DisplayName("Course Name")]
         public string Course { get; set; }
+        [DisplayName("Hours of Teaching")]
         public int TeachingHours { get; set; }
         public string Topic { get; set; }
         public int TimeAllocationHelperId { get; set; }
@@ -166,7 +171,9 @@ namespace WebApp_Scheduler.Models
 
     public class ListOfCourseSelectionViewModel
     {
+        [DisplayName("Course Name")]
         public int CourseId { get; set; }
+        [DisplayName("Program Name")]
         public int IdOfProgram { get; set; }
         public List<CourseSelectionViewModel> selectedCourses { get; set; }
         public List<CourseSelectionViewModel> selectOptions { get; set; }

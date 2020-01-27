@@ -181,6 +181,7 @@
     .not-selected {
         color: red;
     }
+
     .body-content {
         margin-right: 0;
         margin-left: 0px;
@@ -246,5 +247,10 @@
 
         </div>
     }
+    <div>
+        @{
+            Html.RenderAction("CoursesDetailsForProgram", new { ProgramId = @Model.ProgramId });
+        }
+    </div>
 </div>
 
