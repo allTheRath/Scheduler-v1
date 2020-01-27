@@ -200,10 +200,12 @@ namespace WebApp_Scheduler.Controllers
         public ActionResult AddHoursInDay([Bind(Include = "Id,Topic,AmountOfTeachingHours,TimeAllocationId,RemainingTime,url")] AddCourseInDayViewModel addCourseInDayViewModel)
         {
             var timeAllocationInstance = db.TimeOfCourse.Find(addCourseInDayViewModel.TimeAllocationId);
+
             var course = db.Courses.Find(addCourseInDayViewModel.Id);
             if (course != null)
             {
                 CourseWithTimeAllocation courseWithTimeAllocation = new CourseWithTimeAllocation() { CourseId = addCourseInDayViewModel.Id, CourseName = course.CourseName, AmountOfTeachingHours = addCourseInDayViewModel.AmountOfTeachingHours, ProgramId = course.ProgramId, TimeAllocationHelperId = addCourseInDayViewModel.TimeAllocationId, Topic = addCourseInDayViewModel.Topic };
+                timeAllocationInstance.RemainingTime -= addCourseInDayViewModel.RemainingTime;
                 db.CourseWithTimeAllocations.Add(courseWithTimeAllocation);
                 db.SaveChanges();
                 string path = addCourseInDayViewModel.url;
