@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
@@ -31,13 +32,41 @@ namespace WebApp_Scheduler.Models
         public DateTime endDate { get; set; }
 
     }
+    public class HelperForPartialDayWithTimeallocationHelper
+    {
+        public int Id { get; set; }
+        public int ProgramId { get; set; }
+        public DateTime Date { get; set; }
+        public char Day { get; set; }
+        public List<int> CouresIds { get; set; }
+        public int RemainingTime { get; set; }
+
+    }
+
+    public class HelperOfDateHoliday
+    {
+        public bool IsHoliday { get; set; }
+        public DateTime Date { get; set; }
+    }
+
+
+    public class AddCourseInDayViewModel
+    {//Id will be course id
+        [DisplayName("Course ")]
+        public int Id { get; set; }
+        public string Topic { get; set; }
+        public int AmountOfTeachingHours { get; set; }
+        public int TimeAllocationId { get; set; }
+        public int RemainingTime { get; set; }
+        public string url { get; set; }
+    }
 
     public class EditCalendarHelper
     {
         public List<TimeAllocationHelper> DateHelper { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
-
+        public int ProgramTeachingHoursPerDay { get; set; }
         public List<bool> holidays { get; set; }
 
     }

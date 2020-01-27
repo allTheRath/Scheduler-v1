@@ -145,8 +145,9 @@ namespace WebApp_Scheduler.Controllers
 
                 tempStartDate = tempStartDate.AddDays(1);
             }
+            var TempProgram = db.Programs.Find(programId);
             List<HelperOfDateHoliday> allHolidaysForThisMonthDates = db.Calendars.Where(x => x.ProgramId == programId && x.Date.Month == month.Month && x.Date.Year == month.Year).ToList().Select(x => new HelperOfDateHoliday() { Date = x.Date, IsHoliday = x.IsHoliday }).ToList();
-            EditCalendarHelper editCalendarHelper = new EditCalendarHelper() { DateHelper = allAssignedTimeTable.OrderBy(x => x.Date).ToList(), startDate = startdate.Value, endDate = enddate.Value };
+            EditCalendarHelper editCalendarHelper = new EditCalendarHelper() { DateHelper = allAssignedTimeTable.OrderBy(x => x.Date).ToList(), startDate = startdate.Value, endDate = enddate.Value, ProgramTeachingHoursPerDay = TempProgram.TotalTeachingHoursOfDay };
             List<bool> flagsForHolidays = new List<bool>();
             foreach (var op in editCalendarHelper.DateHelper)
             {
@@ -172,8 +173,9 @@ namespace WebApp_Scheduler.Controllers
 
         }
 
-        public ActionResult PartialDay(int? timehelperId)
+        public ActionResult PartialDay(int? timehelperId, int? ProgramTeachingHoursPerDay)
         {
+            ViewBag.ProgramTeachingHoursPerDay = (int)ProgramTeachingHoursPerDay;
             if (timehelperId != null && timehelperId != 0)
             {
                 var singleDayReference = db.TimeOfCourse.Find(timehelperId);
@@ -184,22 +186,35 @@ namespace WebApp_Scheduler.Controllers
             return View(new List<CourseWithTimeAllocation>());
         }
 
-        public class HelperForPartialDayWithTimeallocationHelper
+        public ActionResult AddHoursInDay(int? TimeAllocationHelperId, string url = "")
         {
-            public int Id { get; set; }
-            public int ProgramId { get; set; }
-            public DateTime Date { get; set; }
-            public char Day { get; set; }
-            public List<int> CouresIds { get; set; }
-            public int RemainingTime { get; set; }
-
+            var timeAllocationInstance = db.TimeOfCourse.Find(TimeAllocationHelperId);
+            var courses = db.Courses.Where(x => x.ProgramId == timeAllocationInstance.ProgramId).ToList();
+            ViewBag.Id = new SelectList(courses, "Id", "CourseName");
+            AddCourseInDayViewModel addCourseInDayViewModel = new AddCourseInDayViewModel() { RemainingTime = timeAllocationInstance.RemainingTime, TimeAllocationId = timeAllocationInstance.Id, url = url, AmountOfTeachingHours = 0, Topic = "" };
+            return View(addCourseInDayViewModel);
         }
 
-        public class HelperOfDateHoliday
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddHoursInDay([Bind(Include = "Id,Topic,AmountOfTeachingHours,TimeAllocationId,RemainingTime,url")] AddCourseInDayViewModel addCourseInDayViewModel)
         {
-            public bool IsHoliday { get; set; }
-            public DateTime Date { get; set; }
+            var timeAllocationInstance = db.TimeOfCourse.Find(addCourseInDayViewModel.TimeAllocationId);
+            var course = db.Courses.Find(addCourseInDayViewModel.Id);
+            if (course != null)
+            {
+                CourseWithTimeAllocation courseWithTimeAllocation = new CourseWithTimeAllocation() { CourseId = addCourseInDayViewModel.Id, CourseName = course.CourseName, AmountOfTeachingHours = addCourseInDayViewModel.AmountOfTeachingHours, ProgramId = course.ProgramId, TimeAllocationHelperId = addCourseInDayViewModel.TimeAllocationId, Topic = addCourseInDayViewModel.Topic };
+                db.CourseWithTimeAllocations.Add(courseWithTimeAllocation);
+                db.SaveChanges();
+                string path = addCourseInDayViewModel.url;
+                path += "#" + timeAllocationInstance.Date.ToString("MMMM") + "-" + timeAllocationInstance.Date.Year;
+                return Redirect(path);
+            }
+            ViewBag.Id = new SelectList(db.Courses.ToList(), "Id", "CourseName");
+
+            return View();
         }
+
         public ActionResult AddDetailInCalendar(int? calendarId, int? dayNum, string previousUri)
         {
             var cal = db.Calendars.Find(calendarId);
@@ -263,8 +278,8 @@ namespace WebApp_Scheduler.Controllers
 
                 var timeInstanceForRedirectionByDate = db.TimeOfCourse.Find(courseWithTimeAllocation.TimeAllocationHelperId);
                 DateTime monthToGoTo = timeInstanceForRedirectionByDate.Date;
-                
-                string path = temp.url + "#" + monthToGoTo.ToString("MMMM")+ "-" + monthToGoTo.Year.ToString();
+
+                string path = temp.url + "#" + monthToGoTo.ToString("MMMM") + "-" + monthToGoTo.Year.ToString();
                 return Redirect(path);
 
             }
@@ -594,6 +609,13 @@ namespace WebApp_Scheduler.Controllers
 
 
             var courses = db.Courses.Include(c => c.ScheduleType).Where(x => x.ProgramId == programId).ToList();
+            foreach (var c in courses)
+            {
+                if (c.HoursPerDay > program.TotalTeachingHoursOfDay)
+                {
+                    throw new Exception("Course " + c.CourseName + " has " + c.HoursPerDay + "\n But program has " + program.ProgramName + " has " + program.TotalTeachingHoursOfDay + " .\n please update the inputs and try again.");
+                }
+            }
             var courseIds = courses.Select(x => x.Id).ToList();
             var prerequsiteCourses = db.PrerequisiteCourses.Where(x => courseIds.Contains(x.ActualCourseId)).ToList();
             // find all courses which do not have prerequsites.
@@ -647,6 +669,10 @@ namespace WebApp_Scheduler.Controllers
 
                 while (c.OverallTotalHours > 0)
                 {
+                    if (loopingIncrementor == daysOfStudy.Count() || loopingIncrementor < 0)
+                    {
+                        loopingIncrementor = 0;
+                    }
                     var day = daysOfStudy[loopingIncrementor];
 
                     if (day.CouresIds == null)
@@ -665,7 +691,7 @@ namespace WebApp_Scheduler.Controllers
                             flag1 = false;
                         }
 
-                        if (day.RemainingTime - courseInput.HoursPerDay > 0)
+                        if (day.RemainingTime - courseInput.HoursPerDay >= 0)
                         {
 
                             day.CouresIds.Add(courseIDToAssignTime);
@@ -674,14 +700,14 @@ namespace WebApp_Scheduler.Controllers
                             c.OverallTotalHours -= courseInput.HoursPerDay;
                             c.NoOfTeachingDays++;
                         }
-                        else
-                        {
-                            day.CouresIds.Add(courseIDToAssignTime);
-                            day.AllocatedTimes.Add(day.RemainingTime);
-                            c.OverallTotalHours -= day.RemainingTime;
-                            day.RemainingTime = 0;
-                            c.NoOfTeachingDays++;
-                        }
+                        //else
+                        //{
+                        //    day.CouresIds.Add(courseIDToAssignTime);
+                        //    day.AllocatedTimes.Add(day.RemainingTime);
+                        //    c.OverallTotalHours -= day.RemainingTime;
+                        //    day.RemainingTime = 0;
+                        //    c.NoOfTeachingDays++;
+                        //}
 
                     }
                     loopingIncrementor++;
@@ -795,7 +821,7 @@ namespace WebApp_Scheduler.Controllers
                                             startTemp = day.Date;
                                             flag1 = false;
                                         }
-                                        if (day.RemainingTime - courseInput.HoursPerDay > 0)
+                                        if (day.RemainingTime - courseInput.HoursPerDay >= 0)
                                         {
                                             day.CouresIds.Add(courseIDToAssignTime);
                                             day.AllocatedTimes.Add(courseInput.HoursPerDay);
@@ -806,11 +832,11 @@ namespace WebApp_Scheduler.Controllers
                                         else
                                         {
 
-                                            day.CouresIds.Add(courseIDToAssignTime);
-                                            day.AllocatedTimes.Add(day.RemainingTime);
-                                            c.OverallTotalHours -= day.RemainingTime;
-                                            day.RemainingTime = 0;
-                                            c.NoOfTeachingDays++;
+                                            //day.CouresIds.Add(courseIDToAssignTime);
+                                            //day.AllocatedTimes.Add(day.RemainingTime);
+                                            //c.OverallTotalHours -= day.RemainingTime;
+                                            //day.RemainingTime = 0;
+                                            //c.NoOfTeachingDays++;
                                         }
 
                                     }
@@ -861,28 +887,31 @@ namespace WebApp_Scheduler.Controllers
                 courseOfInput.StartDate = tempCourseData.StartDate;
                 courseOfInput.EndDate = tempCourseData.EndDate;
                 courseOfInput.NumberOfDays = tempCourseData.NoOfTeachingDays;
+                db.SaveChanges();
             }
-            db.SaveChanges();
+
 
             //daysOfStudy
-            var programTimeLineData = db.TimeOfCourse.Where(x => x.ProgramId == program.Id).ToList();
+            var programTimeLineData = db.TimeOfCourse.Where(x => x.ProgramId == program.Id).ToList().OrderBy(x => x.Date).ToList();
             foreach (var r in programTimeLineData)
             {
                 db.TimeOfCourse.Remove(r);
-
             }
             db.SaveChanges();
+
             var previouseCalculatedInstances = db.CourseWithTimeAllocations.Where(x => x.ProgramId == program.Id).ToList();
             foreach (var op in previouseCalculatedInstances)
             {
                 db.CourseWithTimeAllocations.Remove(op);
+                db.SaveChanges();
             }
-            db.SaveChanges();
+
             foreach (var dayIns in daysOfStudy)
             {
                 db.TimeOfCourse.Add(dayIns);
+                db.SaveChanges();
             }
-            db.SaveChanges();
+
 
             var newInstancesOfTimeOfCourse = db.TimeOfCourse.Where(x => x.ProgramId == program.Id).ToList();
             foreach (var newIns in newInstancesOfTimeOfCourse)

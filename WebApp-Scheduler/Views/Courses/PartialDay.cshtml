@@ -25,7 +25,8 @@
             <th></th>
         </tr>*@
     @{ var counterAt = 0;}
-
+    @{ var tempTotalAllocatedHrsOfDay = 0;}
+    @{ var tempTimeAllocationHelperId = 0;}
     @foreach (var item in Model)
     {
         { counterAt += 1; }
@@ -49,12 +50,39 @@
             <div>
                 Teaching Hours: @Html.DisplayFor(modelItem => item.AmountOfTeachingHours)
             </div>
+            @{
+                tempTotalAllocatedHrsOfDay += item.AmountOfTeachingHours;
+            }
+
             <div class="edit-btn-c" style="padding-top:2px;">
-                @Html.ActionLink("Edit", "EditDay", new { id = item.Id,url=@Request.Url})
+                @Html.ActionLink("Edit", "EditDay", new { id = item.Id, url = @Request.Url })
             </div>
             @*@using (Html.BeginForm("EditDay", "Courses", FormMethod.Get))*@
 
-
+            @{ tempTimeAllocationHelperId = item.TimeAllocationHelperId;}
         </span>
+
     }
+<div class="shadow">
+    @if((int)@ViewBag.ProgramTeachingHoursPerDay == 0)
+    {
+        <div></div>
+    }
+    else if ((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay > 0)
+    {
+    <div style="color: lightgrey; background-color: lightcyan;">
+        Rem-Hours: @((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay)
+        @Html.ActionLink("Add-Hours","AddHoursInDay",new { TimeAllocationHelperId = tempTimeAllocationHelperId, url=Request.Url}) 
+    </div>
+    }
+    else if ((int)@ViewBag.ProgramTeachingHoursPerDay < tempTotalAllocatedHrsOfDay)
+    {
+    <div style="color: white; background-color: red;">
+        Total-Hrs-Of-Day: @(ViewBag.ProgramTeachingHoursPerDay) || Allocated-Hrs: @(tempTotalAllocatedHrsOfDay)
+    </div>
+    } else if((int)@ViewBag.ProgramTeachingHoursPerDay - tempTotalAllocatedHrsOfDay == 0)
+    {
+        <div style="background-color: green; color: grey;">Ok</div>
+    }
+</div>
 </div>

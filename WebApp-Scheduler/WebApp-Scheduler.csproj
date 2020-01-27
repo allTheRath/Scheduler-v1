@@ -281,6 +281,7 @@
     <Content Include="Views\CourseWithTimeAllocations\Edit.cshtml" />
     <Content Include="Views\CourseWithTimeAllocations\Index.cshtml" />
     <Content Include="Views\Courses\EditDay.cshtml" />
+    <Content Include="Views\Courses\AddHoursInDay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
