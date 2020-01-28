@@ -21,7 +21,9 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProgramStartDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
-                @Html.DisplayFor(model => model.ProgramStartDate, new { htmlAttributes = new { @class = "form-control" } })
+                <div >
+                    @Model.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
+                </div>
                 @Html.ValidationMessageFor(model => model.ProgramStartDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -29,7 +31,9 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProgramEndDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
-                @Html.DisplayFor(model => model.ProgramEndDate, new { htmlAttributes = new { @class = "form-control" } })
+                <div >
+                    @Model.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
+                </div>
                 @Html.ValidationMessageFor(model => model.ProgramEndDate, "", new { @class = "text-danger" })
             </div>
 

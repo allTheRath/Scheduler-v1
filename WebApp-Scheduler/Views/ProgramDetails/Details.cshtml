@@ -7,7 +7,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>ProgramDetails</h4>
+    <h4>Program Details</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -23,7 +23,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ProgramStartDate)
+            @Model.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
         </dd>
 
         <dt>
@@ -31,7 +31,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ProgramEndDate)
+            @Model.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
         </dd>
 
         <dt>

@@ -15,7 +15,7 @@ namespace WebApp_Scheduler.Controllers
         private ScheduleContext db = new ScheduleContext();
 
         // GET: Calendars
-        public ActionResult Index(int? programId, string url="")
+        public ActionResult Index(int? programId, string url = "")
         {
             if (programId == null && url == "")
             {
@@ -58,6 +58,7 @@ namespace WebApp_Scheduler.Controllers
             List<DayOfWeek> dayOfWeeks = new List<DayOfWeek>() { DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday };
             DateTime st = new DateTime(month.Year, month.Month, 1);
             int startingNumber = 0;
+            int totalDaysOfMonth = 0;
             for (int d = 0; d < dayOfWeeks.Count(); d++)
             {
                 if (dayOfWeeks[d] == st.DayOfWeek)
@@ -79,29 +80,35 @@ namespace WebApp_Scheduler.Controllers
                 if (month.Year % 4 == 0 && month.Year % 100 != 0)
                 {
                     ViewBag.TotalDays = 29;
+                    totalDaysOfMonth = 29;
                 }
                 else
                 {
                     ViewBag.TotalDays = 28;
+                    totalDaysOfMonth = 28;
                 }
             }
             else if (month.Month < 8 && month.Month % 2 == 0)
             {
                 ViewBag.TotalDays = 30;
+                totalDaysOfMonth = 30;
                 // months feb
             }
             else if (month.Month < 8 && month.Month % 2 == 1)
             {
                 ViewBag.TotalDays = 31;
+                totalDaysOfMonth = 31;
             }
             else if (month.Month >= 8 && month.Month % 2 == 0)
             {
                 ViewBag.TotalDays = 31;
+                totalDaysOfMonth = 31;
 
             }
             else if (month.Month >= 8 && month.Month % 2 == 1)
             {
                 ViewBag.TotalDays = 30;
+                totalDaysOfMonth = 30;
             }
             else
             {
@@ -113,15 +120,29 @@ namespace WebApp_Scheduler.Controllers
             ViewBag.Date = startdate.Value;
             ViewBag.DataMonth = month.Month;
             ViewBag.DataYear = month.Year;
-
+            ViewBag.ProgramId = programId.Value;
             SelectHolidayHelper selectHolidayHelper = new SelectHolidayHelper();
-            selectHolidayHelper.CalendarForMonth = db.Calendars.Where(x => x.ProgramId == programId && x.Date.Month == month.Month).ToList();
+            selectHolidayHelper.CalendarForMonth = db.Calendars.Where(x => x.ProgramId == programId && x.Date.Month == month.Month && x.Date.Year == month.Date.Year).ToList();
+            var tempDate = st;
+            while ((tempDate.Month - st.Month == 0) && tempDate.Year == st.Year)
+            {
+                if (selectHolidayHelper.CalendarForMonth.Where(x => x.Date == tempDate).FirstOrDefault() == null)
+                {
+                    Calendar calendar = new Calendar() { Date = tempDate, Day = '-', IsHoliday = true, ProgramId = programId.Value };
+                    db.Calendars.Add(calendar);
+                    db.SaveChanges();
+                   var newCalendarEntry = db.Calendars.Where(x => x.Date == tempDate && x.ProgramId == programId.Value).FirstOrDefault();
+                    selectHolidayHelper.CalendarForMonth.Add(newCalendarEntry);
+                }
+                tempDate = tempDate.AddDays(1);
+            }
+            selectHolidayHelper.CalendarForMonth = selectHolidayHelper.CalendarForMonth.OrderBy(X => X.Date).ToList();
             selectHolidayHelper.startDate = startdate.Value;
             selectHolidayHelper.endDate = enddate.Value;
             return View(selectHolidayHelper);
         }
 
-        public ActionResult SelectHoliday(int? calendarId, int? dayNum, string previousUri)
+        public ActionResult SelectHoliday(int? calendarId, int? dayNum, string previousUri, int? programId)
         {
 
             //DateTime? startdate, DateTime? enddate, int? monthNum, int? programId;
@@ -139,7 +160,12 @@ namespace WebApp_Scheduler.Controllers
                 }
                 db.SaveChanges();
             }
-            return RedirectToAction("Index",new { programId= cal.ProgramId, url = previousUri.ToString() });
+            else if (cal.Date.Day != dayNum)
+            {
+
+            }
+
+            return RedirectToAction("Index", new { programId = cal.ProgramId, url = previousUri.ToString() });
         }
 
         public ActionResult ProgramTimeline(int? ProgramId)
@@ -190,6 +216,7 @@ namespace WebApp_Scheduler.Controllers
                 // no null pt ex for below iteration.
                 previouslyAddedChanges = new List<DateTime>();
             }
+            List<Calendar> valuesToOrderByDate = new List<Calendar>();
             while (startDate <= endDate)
             {
 
@@ -202,7 +229,6 @@ namespace WebApp_Scheduler.Controllers
                     if (startDate.DayOfWeek != DayOfWeek.Saturday && startDate.DayOfWeek != DayOfWeek.Sunday)
                     {
                         c.IsHoliday = false;
-
                     }
                     else
                     {
@@ -210,11 +236,18 @@ namespace WebApp_Scheduler.Controllers
 
                     }
                     c.ProgramId = idOfProgram;
-                    db.Calendars.Add(c);
+                    valuesToOrderByDate.Add(c);
                 }
                 startDate = startDate.AddDays(1);
             }
-            db.SaveChanges();
+
+            var orderedDates = valuesToOrderByDate.OrderBy(x => x.Date).ToList();
+            foreach (var c in orderedDates)
+            {
+                db.Calendars.Add(c);
+                db.SaveChanges();
+
+            }
 
             // initilizing calander days for given program or changed start end date for program
 

@@ -28,7 +28,7 @@
             @{ var temp = 0; }
             @{ var loopingCounter = 0;}
             @{ var tempPath = @Request.Url + "#" + (@ViewBag.Month).ToString() + "-" + (@ViewBag.Year).ToString();}
-
+            @{ var programId = @ViewBag.ProgramId;}
             @for (var i = 1; i <= @ViewBag.TotalDays + 6; i += 7)
             {
                 <tr class="tr-st">
@@ -52,14 +52,14 @@
                                 if (Model.CalendarForMonth[loopingCounter].IsHoliday == true)
                                 {
                                     <td style="color: red; background-color: dimgrey;" data-flag="false">
-                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath, programId = programId })
                                         @{loopingCounter += 1;}
                                     </td>
                                 }
                                 else
                                 {
                                     <td style="color: blue; background-color: white;" data-flag="false">
-                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath , programId = programId })
                                         @{loopingCounter += 1;}
                                     </td>
 
@@ -71,14 +71,14 @@
                                 if (Model.CalendarForMonth[loopingCounter].IsHoliday == true)
                                 {
                                     <td style="color: red; background-color: dimgrey;" data-flag="false">
-                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath, programId = programId })
                                         @{loopingCounter += 1;}
                                     </td>
                                 }
                                 else
                                 {
                                     <td style="color: blue; background-color: white;" data-flag="false">
-                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath, programId = programId })
                                         @{loopingCounter += 1;}
                                     </td>
 
@@ -90,14 +90,14 @@
                                 if (Model.CalendarForMonth[loopingCounter].IsHoliday == true)
                                 {
                                     <td style="color:red; background-color: dimgrey;" data-flag="false">
-                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath, programId = programId })
                                         @{loopingCounter += 1;}
                                     </td>
                                 }
                                 else
                                 {
                                     <td style="color:blue; background-color: white;" data-flag="false">
-                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath })
+                                        @Html.ActionLink((i + j - temp).ToString(), "SelectHoliday", new { calendarId = Model.CalendarForMonth[loopingCounter].Id, dayNum = (i + j - temp), previousUri = tempPath, programId = programId })
                                         @{loopingCounter += 1;}
                                     </td>
                                 }

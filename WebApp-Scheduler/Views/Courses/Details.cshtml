@@ -68,7 +68,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.StartDate)
+            @Model.StartDate.Value.ToString("dddd, dd MMMM yyyy")
         </dd>
 
         <dt>
@@ -76,7 +76,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.EndDate)
+            @Model.EndDate.Value.ToString("dddd, dd MMMM yyyy")
         </dd>
 
     </dl>

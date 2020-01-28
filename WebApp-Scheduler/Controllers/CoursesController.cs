@@ -17,6 +17,7 @@ namespace WebApp_Scheduler.Controllers
         // GET: Courses
         public ActionResult Index(int? IdOfProgram, int ProgramId = 0)
         {
+            ViewBag.ProgramId = IdOfProgram.Value;
             if (ProgramId != 0)
             {
                 var courses = db.Courses.Include(c => c.ScheduleType).Where(x => x.ProgramId == ProgramId);

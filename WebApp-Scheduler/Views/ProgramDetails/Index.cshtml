@@ -35,10 +35,10 @@
                 @Html.DisplayFor(modelItem => item.ProgramName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProgramStartDate)
+                @item.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProgramEndDate)
+                @item.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TotalTeachingHoursOfDay)
