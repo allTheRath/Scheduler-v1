@@ -11,10 +11,33 @@
     body {
         background-color: #fff;
     }
+
+    th {
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: large;
+    }
+
+    label {
+        font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    }
+
+    td {
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: medium;
+    }
+
+    .btn-default {
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        color: olive;
+    }
+
+    td > a {
+        color: olive;
+    }
 </style>
 <body>
-    
-    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:rgb(0, 109, 93);">
+
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:rgb(11, 56, 49);">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -23,11 +46,13 @@
                     <span class="icon-bar"></span>
                 </button>
                 <span class="hover-a">
-                    @Html.ActionLink(" Programs ", "Index", "ProgramDetails", new { area = "" }, new { @class = "navbar-brand" })
+                    <span style="color: darkblue !important;">
+                        @Html.ActionLink(" Programs ", "Index", "ProgramDetails", new { area = "" }, new { @class = "navbar-brand" })
+                    </span>
                 </span>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav" style="color: black;">
+                <ul class="nav navbar-nav" style="color: white;">
                     <li class="hover-a">@Html.ActionLink("Create-Program", "Create", "ProgramDetails")</li>
                     <li class="hover-a">@Html.ActionLink("Create-Course", "Create", "Courses")</li>
                     @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
@@ -38,7 +63,16 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
+        <p style="        margin-top: 400px;
+        background-color: white;
+        width: 100%;">
+            How to use: Create a program if not present >> Add course details in program >> Generate Calendar ( Select holidays for the time line.) >> Calculate Schedule >> See the calendar in Calender.
+            If you are running this application for first time please click
+            <span>
+                @Html.ActionLink("here", "InitialDatabaseEntries", "Courses")
+            </span>
+        </p>
+        <footer style="">
             <p>&copy; @DateTime.Now.Year - Scheduler For Courses</p>
         </footer>
     </div>

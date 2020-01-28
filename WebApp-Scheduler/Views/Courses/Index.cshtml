@@ -7,8 +7,8 @@
 
 <p style="margin: 5px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: chocolate;">
     @Html.ActionLink("Calculate Schedule", "CalculateSchedule", new { programId = tempProgramId }, new { @class = "btn btn-default" }) ||
-    @Html.ActionLink("See Calendar", "UpdateCalendar", "Courses", new { programId = tempProgramId }, new { @class = "btn btn-default" }) ||
-    @Html.ActionLink("Generate Calendar", "ProgramTimeline", "Calendars", new { ProgramId = tempProgramId }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Select Holidays", "ProgramTimeline", "Calendars", new { ProgramId = tempProgramId }, new { @class = "btn btn-default" }) ||->
+    @Html.ActionLink("See Calendar", "UpdateCalendar", "Courses", new { programId = tempProgramId }, new { @class = "btn btn-default" })
 </p>
 
 <table class="table">
@@ -60,7 +60,7 @@
                 @{
                     Html.RenderAction("DisplayPrerequsite", new { courseId = item.Id });
                 }
-                <span> @Html.ActionLink("Change", "AddPrerequisite", new { courseId = item.Id })</span>
+                <span style="color: olivedrab !important;" class="change"> @Html.ActionLink("Change", "AddPrerequisite", new { courseId = item.Id })</span>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Instructor)
@@ -106,10 +106,17 @@
         Html.RenderAction("ProgramDetails", new { Id = tempProgramId });
     }
 </p>
-<p>
+<p style="font-family: 'Bell MT';">
+    <hr/>
+    <p style="color: darkseagreen;">
 
-    To generate Excel Data please click @Html.ActionLink("generate", "Index", "Schedules", new { programId = tempProgramId}, new { @class = "btn btn-default" })
-    Files are generated in Excel Folder on server.
+        To generate Excel Data please click @Html.ActionLink("generate", "Index", "Schedules", new { programId = tempProgramId }, new { @class = "btn btn-default" })
+        Files are generated in Excel Folder on server.
+    </p>
+
+    <b style="color: darkseagreen;">
+        Reminder: First time when schedule is calculated, click on Add Holidays and then click on See Calendar.
+    </b>
 </p>
 
 

@@ -128,7 +128,7 @@ namespace WebApp_Scheduler.Models
     {
 
         public int Id { get; set; }
-        [DisplayName("Day selection")]
+        [DisplayName("Teaching Days")]
         public string DayOption { get; set; }
         public virtual ICollection<Course> CoursesWithScheduleType { get; set; }
 

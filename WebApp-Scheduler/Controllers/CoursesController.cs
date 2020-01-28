@@ -1035,7 +1035,8 @@ namespace WebApp_Scheduler.Controllers
 
             }
 
-            return RedirectToAction("Index", new { IdOfProgram = program.Id });
+           
+            return RedirectToAction("UpdateCalendar", new { programId = program.Id });
         }
 
         protected override void Dispose(bool disposing)

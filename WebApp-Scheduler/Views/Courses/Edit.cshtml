@@ -80,13 +80,15 @@
                 </div>
             </div>*@
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ScheduleTypeId, "ScheduleTypeId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ScheduleTypeId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ScheduleTypeId, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        <b class="control-label col-md-2">
+            Teaching Days
+        </b>
+        <div class="col-md-10">
+            @Html.DropDownList("ScheduleTypeId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ScheduleTypeId, "", new { @class = "text-danger" })
         </div>
+    </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

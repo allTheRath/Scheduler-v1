@@ -11,13 +11,7 @@
     <h4>Course</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ScheduleType.DayOption)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ScheduleType.DayOption)
-        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.CourseCode)
         </dt>
@@ -63,7 +57,13 @@
         <dd>
             @Html.DisplayFor(model => model.NumberOfDays)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ScheduleType.DayOption)
+        </dt>
 
+        <dd>
+            @Html.DisplayFor(model => model.ScheduleType.DayOption)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
