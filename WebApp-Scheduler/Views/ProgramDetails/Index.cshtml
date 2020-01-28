@@ -4,11 +4,6 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th></th>
@@ -35,10 +30,18 @@
                 @Html.DisplayFor(modelItem => item.ProgramName)
             </td>
             <td>
-                @item.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
+                @if (item.ProgramStartDate != null)
+                {
+                    @item.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
+
+                }
             </td>
             <td>
-                @item.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
+                @if (item.ProgramEndDate != null)
+                {
+                    @item.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
+
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TotalTeachingHoursOfDay)

@@ -78,10 +78,18 @@
                 @Html.DisplayFor(modelItem => item.ScheduleType.DayOption)
             </td>
             <td>
-                @item.StartDate.Value.ToString("dddd, dd MMMM yyyy")
+                @if (@item.StartDate != null)
+                {
+                    @item.StartDate.Value.ToString("dddd, dd MMMM yyyy")
+
+                }
             </td>
             <td>
-                @item.EndDate.Value.ToString("dddd, dd MMMM yyyy")
+                @if (item.EndDate != null)
+                {
+                    @item.EndDate.Value.ToString("dddd, dd MMMM yyyy")
+
+                }
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |

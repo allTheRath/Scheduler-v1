@@ -23,7 +23,11 @@
         </dt>
 
         <dd>
-            @Model.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
+            @if (@Model.ProgramStartDate != null)
+            {
+                @Model.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
+
+            }
         </dd>
 
         <dt>
@@ -31,7 +35,11 @@
         </dt>
 
         <dd>
-            @Model.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
+            @if (@Model.ProgramEndDate != null)
+            {
+                @Model.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
+
+            }
         </dd>
 
         <dt>

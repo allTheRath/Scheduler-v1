@@ -21,8 +21,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProgramStartDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
-                <div >
-                    @Model.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
+                <div>
+                    @if (@Model.ProgramStartDate != null)
+                    {
+                        @Model.ProgramStartDate.Value.ToString("dddd, dd MMMM yyyy")
+
+                    }
                 </div>
                 @Html.ValidationMessageFor(model => model.ProgramStartDate, "", new { @class = "text-danger" })
             </div>
@@ -31,8 +35,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProgramEndDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10" style="margin-top: 8px; color:#00a88d;">
-                <div >
-                    @Model.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
+                <div>
+                    @if (@Model.ProgramEndDate != null)
+                    {
+                        @Model.ProgramEndDate.Value.ToString("dddd, dd MMMM yyyy")
+
+                    }
                 </div>
                 @Html.ValidationMessageFor(model => model.ProgramEndDate, "", new { @class = "text-danger" })
             </div>
@@ -84,7 +92,7 @@ else
             Layout = "~/Views/Shared/_Layout.cshtml";
         }
 <div class="form-horizontal">
-    <h4>Program </h4>
+    <h4>Program @Model.ProgramName </h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.Id)

@@ -69,7 +69,11 @@
         </dt>
 
         <dd>
-            @Model.StartDate.Value.ToString("dddd, dd MMMM yyyy")
+            @if (@Model.StartDate != null)
+            {
+                @Model.StartDate.Value.ToString("dddd, dd MMMM yyyy")
+
+            }
         </dd>
 
         <dt>
@@ -77,7 +81,11 @@
         </dt>
 
         <dd>
-            @Model.EndDate.Value.ToString("dddd, dd MMMM yyyy")
+            @if (@Model.EndDate != null)
+            {
+                @Model.EndDate.Value.ToString("dddd, dd MMMM yyyy")
+
+            }
         </dd>
 
     </dl>
