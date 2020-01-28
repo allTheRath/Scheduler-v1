@@ -158,6 +158,7 @@ namespace WebApp_Scheduler.Models
     public class CourseWithTimeAllocationsViewModel
     {
         public int Id { get; set; }
+        public int CourseId { get; set; }
         [DisplayName("Course Name")]
         public string Course { get; set; }
         [DisplayName("Hours of Teaching")]

@@ -10,6 +10,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.url)
+        @Html.HiddenFor(model => model.CourseId)
         @Html.HiddenFor(model => model.TimeAllocationHelperId)
 
         <div class="form-group">
