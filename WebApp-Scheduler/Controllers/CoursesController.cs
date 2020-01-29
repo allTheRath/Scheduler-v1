@@ -236,12 +236,12 @@ namespace WebApp_Scheduler.Controllers
                 instanceOfCourseDataHelper.OverallTotalHours -= addCourseInDayViewModel.AmountOfTeachingHours;
 
                 instanceOfCourseDataHelper.NoOfTeachingDays += 1;
-                if(course.EndDate < timeAllocationInstance.Date)
+                if (course.EndDate < timeAllocationInstance.Date)
                 {
                     course.EndDate = timeAllocationInstance.Date;
-                } 
+                }
                 db.SaveChanges();
-                
+
                 string path = addCourseInDayViewModel.url;
                 path += "#" + timeAllocationInstance.Date.ToString("MMMM") + "-" + timeAllocationInstance.Date.Year;
                 return Redirect(path);
@@ -283,7 +283,7 @@ namespace WebApp_Scheduler.Controllers
                 return HttpNotFound();
             }
 
-            CourseWithTimeAllocationsViewModel courseWithTimeAllocationsViewModel = new CourseWithTimeAllocationsViewModel() { Id = courseWithTimeAllocation.Id, CourseId= courseWithTimeAllocation.CourseId, Course = courseWithTimeAllocation.CourseName, Delete = false, TeachingHours = courseWithTimeAllocation.AmountOfTeachingHours, Topic = courseWithTimeAllocation.Topic, TimeAllocationHelperId = courseWithTimeAllocation.TimeAllocationHelperId, url = url };
+            CourseWithTimeAllocationsViewModel courseWithTimeAllocationsViewModel = new CourseWithTimeAllocationsViewModel() { Id = courseWithTimeAllocation.Id, CourseId = courseWithTimeAllocation.CourseId, Course = courseWithTimeAllocation.CourseName, Delete = false, TeachingHours = courseWithTimeAllocation.AmountOfTeachingHours, Topic = courseWithTimeAllocation.Topic, TimeAllocationHelperId = courseWithTimeAllocation.TimeAllocationHelperId, url = url };
 
             return View(courseWithTimeAllocationsViewModel);
         }
@@ -330,25 +330,70 @@ namespace WebApp_Scheduler.Controllers
 
 
                 var courseUpdation = db.Courses.Find(courseWithTimeAllocation.CourseId);
-                if ((timeInstanceForUpdationOfCourse.Date > courseUpdation.StartDate && timeInstanceForUpdationOfCourse.Date < courseUpdation.EndDate) == false )
+                if (true)
                 {
                     // when start day is deleted or end day is deleted.. Otherwise it does't matter. 
-                    var timeData = db.TimeOfCourse.Where(x => x.ProgramId == timeInstanceForUpdationOfCourse.ProgramId).ToList();
-                    if(timeInstanceForUpdationOfCourse.Date == courseUpdation.StartDate)
+                    var timeData = db.TimeOfCourse.Where(x => x.ProgramId == timeInstanceForUpdationOfCourse.ProgramId).ToList().OrderBy(x => x.Date).ToList();
+                    if (timeInstanceForUpdationOfCourse.Date == courseUpdation.StartDate)
                     {
+                        bool flagOf = false;
                         // start date is deleting
-                        
-                    
+                        for (int i = 0; i < timeData.Count(); i++)
+                        {
+                            if (flagOf == true)
+                            {
+                                int helperId = timeData[i].Id;
+                                // id is passed. now look for an instance where course id matches.
+                                var firstInstance = db.CourseWithTimeAllocations.Where(x => x.CourseId == courseUpdation.Id && x.TimeAllocationHelperId == helperId).ToList().FirstOrDefault();
+                                if (firstInstance != null)
+                                {
+                                    // timeallocation id with the matching date is new start date.
+                                    courseUpdation.StartDate = timeData[i].Date;
+                                    db.SaveChanges();
+                                    break;
+                                }
+                            }
+                            if (timeData[i].Date == timeInstanceForUpdationOfCourse.Date)
+                            {
+                                flagOf = true;
+                            }
+                        }
+
                     }
-                    else
+                    else if(timeInstanceForUpdationOfCourse.Date == courseUpdation.EndDate)
                     {
                         // end date is deleting
-                    
-                    
+
+                        bool flagOf = false;
+                        // start date is deleting
+                        for (int i = timeData.Count() - 1; i >= 0; i--)
+                        {
+                            if (flagOf == true)
+                            {
+                                // id is passed. now look for an instance where course id matches.
+                                int helperId = timeData[i].Id;
+
+                                var firstInstance = db.CourseWithTimeAllocations.Where(x => x.CourseId == courseUpdation.Id && x.TimeAllocationHelperId == helperId).ToList().FirstOrDefault();
+
+    
+                                if (firstInstance != null)
+                                {
+                                    // timeallocation id with the matching date is new start date.
+                                    courseUpdation.EndDate = timeData[i].Date;
+                                    db.SaveChanges();
+                                    break;
+                                }
+                            }
+                            if (timeData[i].Date == timeInstanceForUpdationOfCourse.Date)
+                            {
+                                flagOf = true;
+                            }
+                        }
                     }
-                    courseUpdation.StartDate = timeInstanceForUpdationOfCourse.Date;
+
+
                 }
-                
+
                 db.SaveChanges();
             }
             if (temp != null)
@@ -356,7 +401,7 @@ namespace WebApp_Scheduler.Controllers
 
                 var timeInstanceForRedirectionByDate = db.TimeOfCourse.Find(courseWithTimeAllocation.TimeAllocationHelperId);
                 DateTime monthToGoTo = timeInstanceForRedirectionByDate.Date;
-                
+
                 string path = temp.url + "#" + monthToGoTo.ToString("MMMM") + "-" + monthToGoTo.Year.ToString();
                 return Redirect(path);
 
@@ -492,11 +537,12 @@ namespace WebApp_Scheduler.Controllers
                 {
                     db.TeachingDays.Add(new ScheduleType() { DayOption = op });
                     db.SaveChanges();
-                } else
+                }
+                else
                 {
                     //just in case multiple entries present.
                     var extra = teachingDaysOption.Where(x => x.DayOption == op).ToList();
-                    for(var j = 1; j < extra.Count(); j++)
+                    for (var j = 1; j < extra.Count(); j++)
                     {
                         db.TeachingDays.Remove(extra[j]);
                     }
@@ -826,7 +872,7 @@ namespace WebApp_Scheduler.Controllers
                 //ading calculated no of hours in database
                 var instanceOfSaveCourseInfo = saveDataForCourse.Where(x => x.courseId == c.CourseId).ToList().FirstOrDefault();
                 instanceOfSaveCourseInfo.OverallTotalHours = c.OverallTotalHours;
-                
+
                 c.StartDate = startTemp;
                 c.EndDate = endTemp;
                 loopingCounter++;
@@ -936,7 +982,7 @@ namespace WebApp_Scheduler.Controllers
                                             day.RemainingTime -= courseInput.HoursPerDay;
                                             c.OverallTotalHours -= courseInput.HoursPerDay;
                                             c.NoOfTeachingDays++;
-                                            endTemp = day.Date; 
+                                            endTemp = day.Date;
                                         }
                                         //else
                                         //{
@@ -961,7 +1007,7 @@ namespace WebApp_Scheduler.Controllers
 
                             c.Allocated = true;
                             (saveDataForCourse.Where(x => x.courseId == c.CourseId).ToList().FirstOrDefault()).OverallTotalHours = c.OverallTotalHours;
-                            
+
                             allCoursesWithPrerequsites.Remove(c.CourseId);
                             c.StartDate = startTemp;
                             c.EndDate = endTemp;
